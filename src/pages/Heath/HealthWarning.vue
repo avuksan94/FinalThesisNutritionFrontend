@@ -81,7 +81,7 @@
 .user-info h5 {
   margin-top: 10px;
   color: #555;
-  word-wrap: break-word; /* Ensures text doesn't overflow */
+  word-wrap: break-word; 
 }
 
 .user-info .warning-message {
@@ -89,7 +89,7 @@
   background-color: #d9534f;
   padding: 5px;
   border-radius: 4px;
-  word-wrap: break-word; /* Prevents text from spilling out */
+  word-wrap: break-word;
 }
 
 .user-info ul {
@@ -101,11 +101,11 @@
 .user-info li {
   padding: 5px 0;
   border-bottom: 1px solid #eee;
-  word-wrap: break-word; /* Wraps text within the list item */
+  word-wrap: break-word; 
 }
 
 p, li, h5, a {
-  overflow-wrap: break-word; /* Helps prevent overflow */
+  overflow-wrap: break-word;
 }
 </style>
 

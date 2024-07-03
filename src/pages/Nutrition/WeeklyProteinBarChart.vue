@@ -42,7 +42,7 @@ export default {
             }
         },
         setChartData(weeklyData) {
-            const days = weeklyData.map(item => new Date(item.forDay).toLocaleDateString());
+            const days = weeklyData.map(item => new Date(item.forDay).toLocaleDateString("en-GB"));
             const protein = weeklyData.map(item => item.totalProtein);
 
             return {

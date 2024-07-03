@@ -15,6 +15,16 @@ export default createStore({
     }
   },
   mutations: {
+    resetState(state) {
+      Object.assign(state, {
+        healthInfoUpdated: false,
+        userInfoUpdated: false,
+        recipeData: null,
+        mealPlanData: null,
+        ingredients: [],
+        currentIngredient: null
+      });
+    },
     setHealthInfoUpdated(state, value) {
       state.healthInfoUpdated = value;
     },

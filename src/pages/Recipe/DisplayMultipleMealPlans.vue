@@ -1,8 +1,13 @@
 <template>
-  <div>
+  <div v-if="mealPlans.length > 0">
     <div v-for="(mealPlan, index) in mealPlans" :key="index" class="card-meal-plan">
       <div class="meal-plan-header">
-        <h3>{{ $t('generate_meal_plan.meal_plan_for') }} {{ new Date(mealPlan.createdAt).toLocaleDateString() }}</h3>
+        <h3>{{ $t('generate_meal_plan.meal_plan_for') }} {{ formatDate(mealPlan.createdAt) }}</h3>
+        <div class="row justify-content-center">
+        <button @click="deleteUserMealPlan(mealPlan.id)" class="delete-mp-btn">
+          <i class="bi bi-eraser"></i> {{ $t('meal_plan_card.meal_card_delete_meal') }}
+        </button>
+      </div>
       </div>
       <div class="meal-plan-details">
         <div class="meals-container">
@@ -46,12 +51,11 @@
                 <p v-if="meal.recipe.healthWarning">{{ meal.recipe.healthWarning }}</p>
 
                 <notification-component v-model:visible="notifications[mealIndex].visible"
-                  :message="notifications[mealIndex].message"
-                  :type="notifications[mealIndex].type"
-                  :icon="notifications[mealIndex].icon"
-                  :color="notifications[mealIndex].color"
+                  :message="notifications[mealIndex].message" :type="notifications[mealIndex].type"
+                  :icon="notifications[mealIndex].icon" :color="notifications[mealIndex].color"
                   :size="notifications[mealIndex].size" />
-                <button @click.stop="handleAddingCalories(mealIndex, meal.recipe.nutritionSummary)" class="just-ate-this-btn">
+                <button @click.stop="handleAddingCalories(mealIndex, meal.recipe.nutritionSummary)"
+                  class="just-ate-this-btn">
                   <i class="bi bi-activity"></i> {{ $t('recipe_card.add_to_nutrition_tracker') }}
                 </button>
               </div>
@@ -61,15 +65,18 @@
       </div>
     </div>
   </div>
+  <nothing-here-component v-else></nothing-here-component>
 </template>  
 
 <script>
 import axios from 'axios';
-import NotificationComponent from "../Notification/NotificationComponent.vue"
+import NotificationComponent from "../Notification/NotificationComponent.vue";
+import NothingHereComponent from "../PlaceHolderComponents/NothingHereComponent.vue";
 
 export default {
   components: {
-    NotificationComponent
+    NotificationComponent,
+    NothingHereComponent
   },
   data() {
     return {
@@ -101,6 +108,9 @@ export default {
     handleAddingCalories(index, nutritionData) {
       this.triggerNotification(index, this.$t('recipe_card.add_to_nutrition_message'));
       this.addNutrientsToTracker(nutritionData);
+    },
+    formatDate(date) {
+      return new Date(date).toLocaleDateString('en-GB');
     },
     async fetchUserMeals() {
       const username = localStorage.getItem("nutrioUser");
@@ -144,10 +154,30 @@ export default {
       } catch (error) {
         console.error("Error updating nutrition tracker:", error);
       }
+    },
+    async deleteUserMealPlan(mealPlanId) {
+      const username = localStorage.getItem("nutrioUser");
+      const token = localStorage.getItem("token");
+
+      if (!username || !token) {
+        console.error("Username or token not found in storage.");
+        return;
+      }
+
+      const recipeURL = `/mealPlansGen/${mealPlanId}`;
+      try {
+        await axios.delete(recipeURL, { headers: { Authorization: `Bearer ${token}` } });
+        this.mealPlans = this.mealPlans.filter(plan => plan.id !== mealPlanId);
+        this.triggerNotification(this.mealPlans.findIndex(plan => plan.id === mealPlanId), this.$t('meal_plan_card.meal_deleted_successfully'));
+      } catch (error) {
+        console.error("Error deleting the meal plan:", error);
+      }
     }
+
   }
 };
 </script>
+
 
 <style scoped>
 .card-meal-plan {
@@ -216,6 +246,16 @@ export default {
 
 .just-ate-this-btn {
   background-color: #3eb27c;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.delete-mp-btn {
+  background-color: #d9534f;
   color: white;
   padding: 8px 12px;
   border: none;

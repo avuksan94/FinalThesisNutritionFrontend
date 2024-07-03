@@ -5,7 +5,7 @@
       <button
         class="navbar-toggler navbar-burger"
         type="button"
-        @click="toggleSidebar"
+        @click.stop="toggleSidebar"
         :aria-expanded="$sidebar.showSidebar"
         aria-label="Toggle navigation"
       >
@@ -48,13 +48,16 @@ export default {
     },
     toggleSidebar() {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+      console.log("Toggling sidebar");
     },
     hideSidebar() {
       this.$sidebar.displaySidebar(false);
+      console.log("Hiding sidebar");
     },
     logout() {
       localStorage.removeItem('token');
       localStorage.removeItem('nutrioUser');
+      this.$store.commit('resetState');
       this.$router.push('/login');
     },
     fetchLoggedInUser() {

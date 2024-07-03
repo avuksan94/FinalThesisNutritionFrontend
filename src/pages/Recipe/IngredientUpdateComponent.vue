@@ -16,10 +16,6 @@
                     optionLabel="label" optionValue="value"
                     :placeholder="$t('ingredients_add_component.ingredient_unit_placeholder')" />
             </div>
-            <div class="p-field">
-                <label for="notes">{{ $t('ingredients_add_component.ingredient_notes') }}</label>
-                <textarea id="notes" v-model="editableIngredient.notes" rows="3" class="textarea-style"></textarea>
-            </div>
             <div class="button-container">
                 <button type="submit" class="green-button">{{ $t('ingredients_add_component.ingredient_save') }}</button>
                 <button type="button" class="cancel-button"

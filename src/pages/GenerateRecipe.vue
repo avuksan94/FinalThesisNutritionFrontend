@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-content-center">
+  <div class="container-fluid">
     <div>
       <generate-recipe-component @recipe-generated="handleRecipeGenerated"></generate-recipe-component>
     </div>

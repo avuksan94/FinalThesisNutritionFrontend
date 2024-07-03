@@ -38,7 +38,7 @@ export default {
             }
         },
         setChartData(data) {
-            const days = data.map(day => new Date(day.forDay).toLocaleDateString());
+            const days = data.map(day => new Date(day.forDay).toLocaleDateString('en-GB'));
             const nutrients = [
                 { key: 'Calories', label: this.$t('nutrition_charts.calories') },
                 { key: 'Protein', label: this.$t('nutrition_charts.protein') },

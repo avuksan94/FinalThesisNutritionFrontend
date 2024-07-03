@@ -1,5 +1,5 @@
 <template>
-    <div class="row justify-content-center">
+    <div class="container-fluid">
       <div>
         <display-multiple-meal-plans></display-multiple-meal-plans>
       </div>
@@ -17,7 +17,7 @@
   <style scoped>
   @media (max-width: 991px) {
     .user-card, .user-health-card, .edit-profile-form {
-      width: 100%; /* Makes each component take full width on smaller screens */
+      width: 100%; 
     }
   }</style>
   

@@ -213,7 +213,10 @@
         "diet": "Select diet",
         "allergies": "Select allergies",
         "health_conditions": "Select health conditions",
-        "done_btn": "Done, lets go"
+        "done_btn": "Done, lets go",
+        "selection_needed_diet" : "Please select a diet!",
+        "selection_needed_allergies" : "Please select at least one option!",
+        "selection_needed_health_conditions" : "Please select at least one option!"
     },
     "user_profile_form": {
         "title": "Edit Profile",
@@ -234,7 +237,7 @@
         "notes": "Notes:",
         "servings": "Servings:",
         "health_warning": "Health Warning:",
-        "total_calories": "Total Calories: 350g",
+        "total_calories": "Total Calories: ",
         "total_protein": "Total Protein: ",
         "total_carbs": "Total Carbs: ",
         "total_fats": "Total Fats: ",
@@ -249,6 +252,9 @@
         "clear_all" : "Clear All",
         "remove_ingredient" : "Remove",
         "add_message" : "Add an ingredient"
+    },
+    "meal_plan_card" :{
+        "meal_card_delete_meal" : "I dont like this meal plan!"
     },
     "generate_meal_plan" : {
         "meal_plan_for" : "Meal plan for",
@@ -325,7 +331,7 @@
         "liter": "L",
         "teaspoon": "tsp",
         "tablespoon": "tbsp",
-        "fluid ounce": "fl oz",
+        "fluid_ounce": "fl oz",
         "cup": "cup",
         "pint": "pt",
         "quart": "qt",
@@ -341,5 +347,33 @@
         "bottle": "bottle",
         "bag": "bag",
         "box": "box"
+      },
+      "warning_messages" : {
+        "something_went_wrong" : "Something went wrong.Try again!",
+        "select_ingredients" : "Select at least one ingredient!",
+        "failed_tracker" : "Failed to create tracker! Try again"
+      },
+      "info_messages" : {
+        "success_update" : "Profile updated successfully!"
+      },
+      "forget_me" : {
+        "delete_account" : "Forget me",
+        "are_you_sure" : "Warning: This action will permanently delete your user account. Are you sure you want to proceed?"
+      },
+      "empty_here" : {
+        "message_one" : "WHOOPS...",
+        "message_two" : "SEEMS NOTHINGS HERE... YET"
+      },
+      "empty_here_ingredients" : {
+        "message_one" : "WHOOPS...NO INGREDIENTS..",
+        "message_two" : "ADD SOME WITH THE + BUTTON"
+      },
+      "empty_here_ingredients_add" : {
+        "message_one" : "WHOOPS...NO INGREDIENTS..",
+        "message_two" : "GO TO THE INGREDIENTS PAGE AND ADD SOME!"
+      },
+      "not_found" : {
+        "message_one" : "SEEMS THERES NOTHING HERE...",
+        "message_two" : "ENDLESS VOID"
       }
 }

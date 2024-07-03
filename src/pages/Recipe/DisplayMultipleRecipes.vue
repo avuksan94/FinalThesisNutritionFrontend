@@ -1,5 +1,6 @@
 <template>
-    <div class="recipe-list">
+    <div>
+    <div v-if="recipes.length > 0" class="recipe-list">
         <div v-for="(recipe, index) in recipes" :key="index" class="card-recipe" :class="{ expanded: recipe.visible }"
             @click="toggleVisibility(recipe)">
             <div>
@@ -65,16 +66,20 @@
             </div>
         </div>
     </div>
+    <nothing-here-component v-else></nothing-here-component>
+    </div>
 </template>
 
 <script>
 import axios from 'axios';
 import NotificationComponent from "../Notification/NotificationComponent.vue"
-
+import NothingHereComponent from "../PlaceHolderComponents/NothingHereComponent.vue"
 
 export default {
     components: {
-        NotificationComponent
+        NotificationComponent,
+        NothingHereComponent
+        
     },
     data() {
         return {

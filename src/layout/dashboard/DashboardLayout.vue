@@ -24,7 +24,7 @@
     </side-bar>
     <div class="main-panel">
       <top-navbar></top-navbar>
-      <dashboard-content @click.native="toggleSidebar"></dashboard-content>
+      <dashboard-content></dashboard-content>
       <content-footer></content-footer>
     </div>
   </div>
@@ -46,6 +46,7 @@ export default {
   methods: {
     toggleSidebar() {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+      console.log("Toggling side bar --- DashboardLayout");
     },
   },
 };

@@ -19,13 +19,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Ensure it takes at least the height of the viewport */
-    background-color: #f4f3ef; /* Consistent background color */
+    min-height: 100vh; 
+    background-color: #f4f3ef; 
   }
   
-  @media (max-width: 768px) { /* Adjusting for tablets and mobile phones */
+  @media (max-width: 768px) { 
     .page-container {
-      padding: 20px; /* Adds padding to prevent elements from touching the edges */
+      padding: 20px; 
     }
   }
   </style>

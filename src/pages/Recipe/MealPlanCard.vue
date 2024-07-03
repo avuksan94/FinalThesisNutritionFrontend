@@ -2,7 +2,7 @@
   <card class="card-meal-plan">
     <div class="meal-plan-details">
       <div class="meal-plan-header">
-        <h3>{{ $t('generate_meal_plan.meal_plan_for') }} {{ displayMealPlan.createdAt }}</h3>
+        <h3>{{ $t('generate_meal_plan.meal_plan_for') }} {{ displayMealPlan.formattedDate }}</h3>
       </div>
       <div class="meals-container">
         <div v-for="meal in displayMealPlan.meals" :key="meal.meal" class="meal-section">
@@ -50,8 +50,8 @@
         </div>
       </div>
       <button @click="deleteUserMealPlan(displayMealPlan.id)" class="delete-mp-btn">
-          <i class="bi bi-eraser"></i> {{ $t('recipe_card.delete_recipe') }}
-        </button>
+        <i class="bi bi-eraser"></i> {{ $t('meal_plan_card.meal_card_delete_meal') }}
+      </button>
     </div>
   </card>
 </template>
@@ -59,6 +59,7 @@
   
 <script>
 import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -86,17 +87,23 @@ export default {
       } catch (error) {
         console.error("Error deleting the meal plan:", error);
       }
+    },
+    formatDate(date) {
+      return new Date(date).toLocaleDateString('en-GB');
     }
   },
   computed: {
     displayMealPlan() {
-      console.log('Current meal plan data:', this.mealPlan);
-      return this.$store.state.mealPlanData;
+      const mealPlan = this.$store.state.mealPlanData;
+      return {
+        ...mealPlan,
+        formattedDate: this.formatDate(mealPlan.createdAt)
+      };
     }
   }
 };
 </script>
-  
+
 <style scoped>
 .card-meal-plan {
   max-width: 1200px;

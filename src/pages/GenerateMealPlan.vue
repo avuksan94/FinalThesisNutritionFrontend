@@ -1,5 +1,5 @@
 <template>
-    <div class="row justify-content-center">
+    <div class="container-fluid">
       <div>
        <generate-meal-plan-component></generate-meal-plan-component>
       </div>

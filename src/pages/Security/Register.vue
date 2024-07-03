@@ -1,5 +1,7 @@
 <template>
   <div class="register-container">
+    <custom-pop-up v-if="popup.isVisible" :title="popup.title" :message="popup.message" :confirm="popup.confirm"
+      :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
     <div class="form-and-disclaimer">
       <div class="register-box">
         <h1>Register</h1>
@@ -60,10 +62,13 @@
               </select>
             </div>
           </div>
-          <button type="submit" class="register-button" :disabled="!acceptedDisclaimer">
+          <button type="submit" class="register-button">
             Register
           </button>
         </form>
+        <div v-if="disclaimerWarning" class="warning-message">
+          You must accept the disclaimer to register.
+        </div>
         <div class="register-link">
           <p>Already have an account?</p>
           <router-link to="/login">Login here</router-link>
@@ -73,16 +78,18 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 import axios from 'axios';
 import DisclaimerComponent from './Disclaimer.vue';
 import { required, email } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
+import CustomPopUp from '../Notification/CustomPopUp.vue';
 
 export default {
   components: {
-    DisclaimerComponent
+    DisclaimerComponent,
+    CustomPopUp
   },
   data() {
     return {
@@ -97,6 +104,13 @@ export default {
       },
       acceptedDisclaimer: false,
       showDisclaimer: true,
+      disclaimerWarning: false,
+      popup: {
+        isVisible: false,
+        title: '',
+        message: '',
+        confirm: false
+      }
     };
   },
   validations() {
@@ -108,7 +122,7 @@ export default {
         email: { required, email },
         phoneNumber: { required },
         password: { required },
-        language: { required } 
+        language: { required }
       }
     }
   },
@@ -119,7 +133,13 @@ export default {
   methods: {
     async register() {
       this.v$.$validate();
-      if (!this.v$.$error && this.acceptedDisclaimer) {
+      if (!this.v$.$error) {
+        if (!this.acceptedDisclaimer) {
+          this.disclaimerWarning = true;
+          return;
+        } else {
+          this.disclaimerWarning = false;
+        }
         try {
           const response = await axios.post('/authentication/register', {
             ...this.form,
@@ -128,20 +148,31 @@ export default {
           console.log("Registration successful:", response.data);
           this.$router.push('/login');
         } catch (error) {
+          //alert("Username or email already in use!");
+          this.popup.isVisible = true;
+          this.popup.title = 'Registration Error';
+          this.popup.message = 'Username or email already in use!';
+          this.popup.confirm = false;
+
           console.error('Registration failed:', error);
           this.error = "Failed to register. Please check your details and try again.";
         }
-      } else {
       }
     },
     handleDisclaimerAccepted() {
       this.acceptedDisclaimer = true;
       this.showDisclaimer = false;
+    },
+    handlePopupConfirm() {
+      this.popup.isVisible = false;
+    },
+    handlePopupCancel() {
+      this.popup.isVisible = false;
     }
-  },
+  }
 }
 </script>
-  
+
 <style scoped>
 .register-container {
   display: flex;
@@ -223,6 +254,12 @@ button.register-button:hover {
   margin-top: 4px;
 }
 
+.warning-message {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
 select {
   padding: 10px;
   border: 2px solid #ccc;
@@ -236,4 +273,3 @@ select:focus {
   border-color: #3db17c;
 }
 </style>
-  

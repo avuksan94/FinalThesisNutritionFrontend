@@ -41,6 +41,7 @@ export default {
     hideSidebar() {
       if (this.autoClose) {
         this.$sidebar.displaySidebar(false);
+        console.log("Hiding sidebar -- from SidebarLink.vue");
       }
     },
     isActive() {
@@ -58,5 +59,5 @@ export default {
 </script>
 
 <style scoped>
-/* Styles specific to SidebarLink */
+
 </style>

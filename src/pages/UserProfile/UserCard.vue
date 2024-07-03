@@ -10,14 +10,21 @@
             <small>{{ email }}</small>
           </a>
         </h4>
+        <div class="row justify-content-center">
+          <forget-me></forget-me>
+        </div>
       </div>
     </div>
   </card>
 </template>
 <script>
 import axios from "axios";
+import ForgetMe from "../Security/ForgetMe.vue"
 
 export default {
+  components : {
+    ForgetMe
+  },
   data() {
     return {
       firstName: "",
@@ -85,22 +92,22 @@ export default {
 
 img {
   width: 200px; 
-  height: 200px; /* Set image size */
-  border-radius: 50%; /* Make image circular */
-  margin-bottom: 10px; /* Space below the image */
+  height: 200px;
+  border-radius: 50%; 
+  margin-bottom: 10px; 
 }
 
 h4 {
-  text-align: center; /* Center text */
-  margin: 0; /* Remove default margin */
+  text-align: center; 
+  margin: 0;
 }
 
 a {
-  text-decoration: none; /* Optional: removes underline from link */
-  color: #000; /* Black text for link */
+  text-decoration: none; 
+  color: #000; 
 }
 
 a small {
-  display: block; /* Makes the email appear on its own line */
+  display: block; 
 }
 </style>

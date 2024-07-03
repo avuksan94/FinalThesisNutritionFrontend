@@ -6,6 +6,7 @@ const SidebarStore = reactive({
   showSidebar: false,
   sidebarLinks: [],
   displaySidebar(value) {
+    console.log("Display sidebar called -- index.js");
     this.showSidebar = value;
   },
 });

@@ -28,11 +28,6 @@
                 :placeholder="$t('ingredients_add_component.ingredient_unit_placeholder')" />
             </div>
 
-            <div class="p-field">
-                <label for="notes">{{ $t('ingredients_add_component.ingredient_notes') }}</label>
-                <Textarea id="notes" v-model="item.notes" rows="3" />
-            </div>
-
             <div class="row justify-content-center">
                 <Button :label="$t('ingredients_add_component.ingredient_save')" class="green-button" icon="pi pi-check"
                     @click="addItem" />

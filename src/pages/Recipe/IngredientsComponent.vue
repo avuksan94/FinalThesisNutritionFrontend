@@ -4,15 +4,14 @@
         <UpdateIngredient v-if="currentIngredient" :selectedIngredient="currentIngredient"
             @ingredientUpdated="refreshIngredients" @updateComplete="refreshIngredients"  @closeForm="closeForm"/>
     </div>
-    <div class="card">
+    <div >
         <DataTable v-if="ingredients && ingredients.length" :value="ingredients"
         sortMode="multiple"
         paginator :rows="10"
-            :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem">
+            :rowsPerPageOptions="[5, 10, 20, 50]" >
             <Column field="name" :header="$t('ingredients.ingredient_name')" sortable></Column>
             <Column field="quantity" :header="$t('ingredients.ingredient_quantity')" sortable></Column>
             <Column field="unit" :header="$t('ingredients.ingredient_unit')" sortable></Column>
-            <Column field="notes" :header="$t('ingredients.ingredient_notes')" sortable></Column>
             <Column>
                 <template #body="slotProps">
                     <div class="row justify-content-center">
@@ -22,7 +21,7 @@
                 </template>
             </Column>
         </DataTable>
-        <p v-else>{{ $t('ingredients.empty_warning') }}</p>
+        <nothing-here-ingredients-component v-else></nothing-here-ingredients-component>
     </div>
     </div>
 </template>
@@ -34,13 +33,15 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import UpdateIngredient from '../Recipe/IngredientUpdateComponent.vue';
+import NothingHereIngredientsComponent from '../PlaceHolderComponents/NothingHereIngredientsComponent.vue'
 
 export default {
     components: {
         DataTable,
         Column,
         Button,
-        UpdateIngredient
+        UpdateIngredient,
+        NothingHereIngredientsComponent
     },
     computed: {
         ...mapState(['ingredients', 'currentIngredient'])

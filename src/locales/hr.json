@@ -209,11 +209,14 @@
         "update_btn": "Ažuriraj moje podatke"
     },
     "initial_health_tracker": {
-        "set_health_info": "Kreiraj informacije o zdravlju",
+        "set_health_info": "Postavi informacije o zdravlju",
         "diet": "Odaberite dijetu",
         "allergies": "Odaberite alergije",
         "health_conditions": "Odaberite zdravstena stanja",
-        "done_btn": "Kreiraj, idemo dalje"
+        "done_btn": "Kreiraj, idemo dalje",
+        "selection_needed_diet" : "Molim odaberite dijetu!",
+        "selection_needed_allergies" : "Molim odaberite barem jednu stavku!",
+        "selection_needed_health_conditions" : "Molim odaberite barem jednu stavku!"
     },
     "user_profile_form": {
         "title": "Ažuriraj korisnički profil",
@@ -249,6 +252,9 @@
         "clear_all": "Ukloni sve",
         "remove_ingredient": "Ukloni",
         "add_message": "Dodaj namirnicu"
+    },
+    "meal_plan_card" :{
+        "meal_card_delete_meal" : "Ne sviđa mi se ovaj plan prehrane"
     },
     "generate_meal_plan": {
         "meal_plan_for": "Plan prehrane za",
@@ -325,7 +331,7 @@
         "liter": "L",
         "teaspoon": "žličica",
         "tablespoon": "žlica",
-        "fluid ounce": "tekuća unca",
+        "fluid_ounce": "tekuća unca",
         "cup": "šalica",
         "pint": "pinta",
         "quart": "kvart",
@@ -341,5 +347,33 @@
         "bottle": "boca",
         "bag": "vrećica",
         "box": "kutija"
+      },
+      "warning_messages" : {
+        "something_went_wrong" : "Došlo je do pogreške. Pokušajte ponovno!",
+        "select_ingredients" : "Odaberite barem jednu namirnicu!",
+        "failed_tracker" : "Došlo je do pogreške. Pokušajte ponovno!"
+      },
+      "info_messages" : {
+        "success_update" : "Profil uspješno ažuriran!"
+      },
+      "forget_me" : {
+        "delete_account" : "Zaboravi me",
+        "are_you_sure" : "Upozorenje: Ova akcija trajno će izbrisati vaš korisnički račun. Jeste li sigurni da želite nastaviti?"
+      },
+      "empty_here" : {
+        "message_one" : "OPA",
+        "message_two" : "PRAZNO.. ZA SADA"
+      },
+      "empty_here_ingredients" : {
+        "message_one" : "OPA...NEMA NAMIRNICA..",
+        "message_two" : "PROBAJTE DODATI NAMIRNICE KLIKOM NA +"
+      },
+      "empty_here_ingredients_add" : {
+        "message_one" : "OPA...NEMA NAMIRNICA..",
+        "message_two" : "DODAJTE NAMIRNICE NA STRANICI - MOJE NAMIRNICE!"
+      },
+      "not_found" : {
+        "message_one" : "IZGLEDA DA OVDJE NEMA NIŠTA...",
+        "message_two" : "PRAZNINA..."
       }
 }

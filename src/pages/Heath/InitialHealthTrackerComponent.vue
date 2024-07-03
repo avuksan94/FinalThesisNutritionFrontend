@@ -1,4 +1,6 @@
 <template>
+    <custom-pop-up v-if="popup.isVisible" :title="popup.title" :message="popup.message" :confirm="popup.confirm"
+        :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
     <div class="form-container">
         <div class="health-box">
             <div class="row justify-content-center">
@@ -6,24 +8,36 @@
                     <div class="pixel-spinner-inner"></div>
                 </div>
             </div>
-            <h4>Set Your Health Information</h4>
+            <h4>{{ $t('initial_health_tracker.set_health_info') }}</h4>
             <form @submit.prevent="setHealthConditions">
                 <div class="input-group">
                     <label for="dietDropdown">{{ $t('user_health_card.diet') }}</label>
                     <Dropdown id="dietDropdown" v-model="userHealthInfo.diet" :options="dietOptions" optionLabel="label"
-                    :placeholder="$t('initial_health_tracker.diet')" class="input-full" />
+                        :placeholder="$t('initial_health_tracker.diet')" class="input-full" />
+                    <span class="error-message" v-if="v$.userHealthInfo.diet.$error">
+                        {{ $t('initial_health_tracker.selection_needed_diet') }}
+                    </span>
                 </div>
                 <div class="input-group">
                     <label for="allergies">{{ $t('user_health_card.allergies') }}</label>
                     <MultiSelect id="allergies" v-model="userHealthInfo.allergies" display="chip" filter
-                        :options="allergyOptions" optionLabel="label" :placeholder="$t('initial_health_tracker.allergies')" :maxSelectedLabels="4"
-                        :selectAll="false" class="input-full" />
+                        :options="allergyOptions" optionLabel="label" :placeholder="$t('initial_health_tracker.allergies')"
+                        :maxSelectedLabels="4" :selectAll="false" class="input-full"
+                        @update:modelValue="selected => checkSelection(selected, 'allergies')" />
+                    <span class="error-message" v-if="v$.userHealthInfo.allergies.$error">
+                        {{ $t('initial_health_tracker.selection_needed_allergies') }}
+                    </span>
                 </div>
                 <div class="input-group">
                     <label for="conditions">{{ $t('user_health_card.health_conditions') }}</label>
                     <MultiSelect id="conditions" v-model="userHealthInfo.healthConditions" display="chip" filter
-                        :options="healthConditionOptions" optionLabel="label" :placeholder="$t('initial_health_tracker.health_conditions')"
-                        :maxSelectedLabels="4" :selectAll="false" class="input-full" />
+                        :options="healthConditionOptions" optionLabel="label"
+                        :placeholder="$t('initial_health_tracker.health_conditions')" :maxSelectedLabels="4"
+                        :selectAll="false" class="input-full"
+                        @update:modelValue="selected => checkSelection(selected, 'healthConditions')" />
+                    <span class="error-message" v-if="v$.userHealthInfo.healthConditions.$error">
+                        {{ $t('initial_health_tracker.selection_needed_health_conditions') }}
+                    </span>
                 </div>
                 <button type="submit" class="submit-button">{{ $t('initial_health_tracker.done_btn') }}</button>
             </form>
@@ -32,19 +46,29 @@
 </template>
   
 <script>
+import { required, minLength } from '@vuelidate/validators';
+import { useVuelidate } from '@vuelidate/core';
 import axios from "axios";
 import MultiSelect from 'primevue/multiselect';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
+import CustomPopUp from '../Notification/CustomPopUp.vue';
 
 export default {
     components: {
         MultiSelect,
         Dropdown,
-        Button
+        Button,
+        CustomPopUp
     },
     data() {
         return {
+            popup: {
+                isVisible: false,
+                title: '',
+                message: '',
+                confirm: false
+            },
             isLoading: false,
             userHealthInfo: {
                 diet: "",
@@ -195,45 +219,85 @@ export default {
             ],
         };
     },
+    validations() {
+        return {
+            userHealthInfo: {
+                diet: { required },
+                allergies: { required, minLength: minLength(1) },
+                healthConditions: { required, minLength: minLength(1) }
+            }
+        };
+    },
+    setup() {
+        const v$ = useVuelidate();
+        return { v$ };
+    },
     methods: {
+        checkSelection(selectedItems, modelKey) {
+            const noneLabel = modelKey === 'allergies' ? this.$t('global_allergies.none') : this.$t('global_health_conditions.none');
+            if (selectedItems.some(item => item.value === 'NONE')) {
+                this.userHealthInfo[modelKey] = [{ label: noneLabel, value: "NONE" }];
+            }
+        },
         async setHealthConditions() {
-            this.isLoading = true;
-            const token = localStorage.getItem("token");
-            const username = localStorage.getItem("nutrioUser");
-            if (!token) {
-                alert("You are not logged in.");
-                this.isLoading = false;
-                return;
-            }
-            let userId = '';
-            let diet = this.userHealthInfo.diet ? this.userHealthInfo.diet.value : null;
-            let knownAllergies = this.userHealthInfo.allergies.map(a => a.value);
-            let healthConditions = this.userHealthInfo.healthConditions.map(hc => hc.value);
+            this.v$.$validate();
+            if (!this.v$.$error) {
+                this.isLoading = true;
+                const token = localStorage.getItem("token");
+                const username = localStorage.getItem("nutrioUser");
+                if (!token) {
+                    alert("You are not logged in.");
+                    this.isLoading = false;
+                    return;
+                }
+                let userId = '';
+                let diet = this.userHealthInfo.diet ? this.userHealthInfo.diet.value : null;
+                let knownAllergies = this.userHealthInfo.allergies.map(a => a.value);
+                let healthConditions = this.userHealthInfo.healthConditions.map(hc => hc.value);
 
-            const userData = { userId, diet, knownAllergies, healthConditions };
+                const userData = { userId, diet, knownAllergies, healthConditions };
 
-            try {
-                await axios.post(`/healthTrackersByUsername/${username}`, userData);
-                this.isLoading = false;
-                this.$router.push('/dashboard');
-            } catch (error) {
-                console.error("Error creating user health tracker:", error);
-                this.isLoading = false;
-                alert("Failed to create tracker. Please try again.");
+                try {
+                    await axios.post(`/healthTrackersByUsername/${username}`, userData);
+                    this.isLoading = false;
+                    this.$router.push('/dashboard');
+                } catch (error) {
+                    console.error("Error creating user health tracker:", error);
+                    this.isLoading = false;
+                    //alert(this.$t('warning_messages.failed_tracker'));
+                    this.setPopUpMessages('ERROR', this.$t('warning_messages.failed_tracker'))
+                }
             }
+        },
+        handlePopupConfirm() {
+            this.popup.isVisible = false;
+        },
+        handlePopupCancel() {
+            this.popup.isVisible = false;
+        },
+        setPopUpMessages(messageLevel, message) {
+            this.popup.isVisible = true;
+            this.popup.title = messageLevel;
+            this.popup.message = message;
+            this.popup.confirm = false;
         }
     }
 };
 </script>
   
 <style scoped>
+.error-message {
+    color: red;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
 .form-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 650px;
     background-color: #f4f3ef;
-    /* Background color for the whole view */
 }
 
 
@@ -241,12 +305,9 @@ export default {
     border: 2px solid #ccc;
     background-color: white;
     padding: 20px;
-    /* Reduced padding for smaller screens */
     text-align: center;
     width: 100%;
-    /* Full width on small screens */
     max-width: 600px;
-    /* Max width for larger screens */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
@@ -258,45 +319,33 @@ export default {
 .input-full,
 button.submit-button {
     width: 100%;
-    /* Ensures full width on small screens */
     padding: 12px;
-    /* Comfortable touch target */
 }
 
 button.submit-button {
     padding: 10px 20px;
     border: none;
-    /* Explicitly removing any border */
     background-color: #3db17c;
-    /* Button color */
     color: white;
-    /* Text color */
     cursor: pointer;
     border-radius: 4px;
-    /* Rounded corners for button */
     width: 100%;
-    /* Full-width button */
     font-size: 16px;
-    /* Larger font size */
     transition: background-color 0.3s;
-    /* Smooth transition for hover effect */
 }
 
 button.submit-button:hover {
     background-color: #369f68;
-    /* Darker shade on hover */
 }
 
 @media (max-width: 768px) {
     .health-box {
         padding: 15px;
-        /* Slightly smaller padding for smaller screens */
     }
 
     .input-full,
     button.submit-button {
         font-size: 14px;
-        /* Adjust font size for readability on small devices */
     }
 }
 </style>

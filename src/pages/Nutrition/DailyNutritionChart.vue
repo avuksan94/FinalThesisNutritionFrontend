@@ -38,7 +38,7 @@ export default {
                 const response = await axios.get(`/nutritionTrackersByUsername/${username}`);
                 const data = response.data;
                 this.nutritionData = this.setChartData(data);
-                this.displayDate = new Date(data.forDay).toLocaleDateString();
+                this.displayDate = new Date(data.forDay).toLocaleDateString("en-GB");
             } catch (error) {
                 console.error('Error fetching nutrition data:', error);
             }

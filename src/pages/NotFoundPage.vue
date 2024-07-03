@@ -1,72 +1,65 @@
 <template>
-  <div class="contact-us full-screen">
-    <nav class="navbar navbar-ct-default" role="navigation-demo">
-      <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button
-            type="button"
-            class="navbar-toggle"
-            data-toggle="collapse"
-            data-target="#navigation-example-2"
-          >
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <router-link :to="{ path: '/' }" class="navbar-brand"
-            >Site title</router-link
-          >
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navigation-example-2">
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <router-link :to="{ path: '/' }">Home</router-link>
-            </li>
-          </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+  <div class="card full-screen">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <img src="@/assets/img/foodPics/404NotFound.webp" alt="Image not found" />
       </div>
-      <!-- /.container-->
-    </nav>
-    <div class="wrapper wrapper-full-page section content">
-      <div class="">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center">
-              <h2 class="title text-danger">404 Not Found</h2>
-              <h2 class="title">
-                Oops! It seems that this page does not exist.
-              </h2>
-            </div>
-          </div>
-        </div>
-      </div>
+      <h4>
+        {{ $t('not_found.message_one') }}
+      </h4>
+      <h4>
+        {{ $t('not_found.message_two') }}
+      </h4>
     </div>
-    <footer class="footer-demo">
-      <div class="container">
-        <nav class="pull-left">
-          <ul>
-            <li>
-              <router-link :to="{ path: '/' }">Home</router-link>
-            </li>
-            <li>
-              <router-link :to="{ path: '/register' }">Register</router-link>
-            </li>
-          </ul>
-        </nav>
-        <div class="copyright pull-right">
-          &copy; 2017, made with
-          <i class="fa fa-heart heart"></i> by Paper admin
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
+
 <script>
-export default {};
 </script>
+
+<style scoped>
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh; 
+  padding: 20px;
+  border-radius: 0;
+  margin: 0; 
+  background-color: white; 
+  box-shadow: none; 
+}
+
+.container-fluid {
+  width: 100%; 
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+h4 {
+  text-align: center;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a small {
+  display: block;
+}
+</style>

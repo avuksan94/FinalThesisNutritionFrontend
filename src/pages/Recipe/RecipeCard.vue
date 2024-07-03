@@ -103,7 +103,6 @@ export default {
 .recipe-left,
 .recipe-right {
   flex: 1;
-  /* Each side takes up half the space */
   margin: 10px;
 }
 
@@ -130,22 +129,17 @@ export default {
 
 .notes {
   background-color: #f3bb45;
-  /* Orange background */
   color: white;
-  /* White text */
   padding: 5px;
   border-radius: 5px;
 }
 
 .health-warning {
   background-color: #d9534f;
-  /* Red background */
   color: white;
-  /* White text */
   padding: 5px;
   border-radius: 5px;
   margin-top: 10px;
-  /* Some spacing from other elements, if necessary */
 }
 
 .delete-recipe-btn {

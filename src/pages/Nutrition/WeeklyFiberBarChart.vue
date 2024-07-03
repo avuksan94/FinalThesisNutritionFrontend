@@ -42,7 +42,7 @@ export default {
             }
         },
         setChartData(weeklyData) {
-            const days = weeklyData.map(item => new Date(item.forDay).toLocaleDateString());
+            const days = weeklyData.map(item => new Date(item.forDay).toLocaleDateString("en-GB"));
             const fibers = weeklyData.map(item => item.totalFiber);
 
             return {

@@ -33,21 +33,21 @@
   <style scoped>
   .content-row {
     display: flex;
-    justify-content: space-between; /* Adjusts spacing between the two components */
-    align-items: start; /* Aligns components to the top */
+    justify-content: space-between; 
+    align-items: start; 
   }
   
   .ingredient-add, .ingredients-list {
-    flex: 1; /* Each takes up equal space */
-    margin: 10px; /* Adds some space around each component */
+    flex: 1; 
+    margin: 10px; 
   }
   
   @media (max-width: 991px) {
     .content-row {
-      flex-direction: column; /* Stacks the components vertically on smaller screens */
+      flex-direction: column; 
     }
     .ingredient-add, .ingredients-list {
-      width: 100%; /* Full width for mobile */
+      width: 100%; 
     }
   }
   </style>

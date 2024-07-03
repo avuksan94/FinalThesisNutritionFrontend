@@ -13,16 +13,16 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 export default {
   install(app) {
-    console.log("Starting to install SidebarPlugin");
+    //console.log("Starting to install SidebarPlugin");
     app.use(SidebarPlugin);
-    console.log("SidebarPlugin installed");
+    //console.log("SidebarPlugin installed");
 
-    console.log("Starting to install GlobalComponents");
+    //console.log("Starting to install GlobalComponents");
     app.use(GlobalComponents);
-    console.log("GlobalComponents installed");
+    //console.log("GlobalComponents installed");
 
-    console.log("Starting to install GlobalDirectives");
+    //console.log("Starting to install GlobalDirectives");
     app.use(GlobalDirectives);
-    console.log("GlobalDirectives installed");
+    //console.log("GlobalDirectives installed");
   },
 };

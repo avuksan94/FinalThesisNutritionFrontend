@@ -1,4 +1,6 @@
 <template>
+  <custom-pop-up v-if="popup.isVisible" :title="popup.title" :message="popup.message" :confirm="popup.confirm"
+  :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
   <card class="card" :title="$t('user_health_form.title')">
     <div class="form-container">
       <div class="row justify-content-center">
@@ -38,6 +40,7 @@
             :maxSelectedLabels="4"
             :selectAll="false"
             class="w-full"
+            @update:modelValue="selected => checkSelection(selected, 'allergies')"
           />
           <span v-if="v$.userHealthInfo.allergies.$error" class="error-message">
             {{ $t('edit_health_info_errors.allergies') }}
@@ -57,6 +60,7 @@
             :maxSelectedLabels="4"
             :selectAll="false"
             class="w-full"
+            @update:modelValue="selected => checkSelection(selected, 'healthConditions')"
           />
           <span v-if="v$.userHealthInfo.healthConditions.$error" class="error-message">
             {{ $t('edit_health_info_errors.health_conditions') }}
@@ -79,14 +83,22 @@ import MultiSelect from 'primevue/multiselect';
 import Dropdown from 'primevue/dropdown';
 import { required, minLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
+import CustomPopUp from '../Notification/CustomPopUp.vue';
 
 export default {
   components: {
     MultiSelect,
-    Dropdown
+    Dropdown,
+    CustomPopUp
   },
   data() {
     return {
+      popup: {
+        isVisible: false,
+        title: '',
+        message: '',
+        confirm: false
+      },
       isLoading: false,
       userHealthInfo: {
         diet: null,
@@ -251,6 +263,12 @@ export default {
     return { v$ };
   },
   methods: {
+    checkSelection(selectedItems, modelKey) {
+      const noneLabel = modelKey === 'allergies' ? this.$t('global_allergies.none') : this.$t('global_health_conditions.none');
+      if (selectedItems.some(item => item.value === 'NONE')) {
+        this.userHealthInfo[modelKey] = [{ label: noneLabel, value: "NONE" }];
+      }
+    },
     async updateHealthConditions() {
       this.v$.$touch();
       if (!this.v$.$invalid) {
@@ -276,16 +294,28 @@ export default {
         console.log(userData);
         try {
           await axios.put(`/healthTrackersByUsername/${username}`, userData);
-          console.log("I DID PUT");
           this.$store.commit('setHealthInfoUpdated', true);
           this.isLoading = false;
           this.$router.go(0);
         } catch (error) {
           console.error("Error updating user health tracker:", error);
           this.isLoading = false;
-          alert("Failed to update tracker. Please try again.");
+          //alert(this.$t('warning_messages.failed_tracker'));
+          this.setPopUpMessages('ERROR', this.$t('warning_messages.failed_tracker'))
         }
       }
+    },
+    handlePopupConfirm() {
+      this.popup.isVisible = false;
+    },
+    handlePopupCancel() {
+      this.popup.isVisible = false;
+    },
+    setPopUpMessages(messageLevel, message) {
+      this.popup.isVisible = true;
+      this.popup.title = messageLevel;
+      this.popup.message = message;
+      this.popup.confirm = false;
     }
   }
 };
@@ -298,9 +328,7 @@ export default {
 
 .form-container {
   max-width: 600px;
-  /* Limit the width of the form for better readability */
   margin: auto;
-  /* Center the form on the page */
   padding: 20px;
 }
 
@@ -312,20 +340,16 @@ export default {
 
 .form-group {
   margin-bottom: 20px;
-  /* Add space between form groups */
 }
 
 label {
   display: block;
-  /* Ensure labels are block to align with inputs properly */
   margin-bottom: 5px;
-  /* Small space between label and input */
 }
 
 select,
 .p-multiselect {
   width: 100%;
-  /* Full width to match design consistency */
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -334,18 +358,16 @@ select,
 
 .form-actions {
   text-align: center;
-  /* Center the actions button */
   padding-top: 20px;
-  /* Space above the button */
 }
 
 .is-invalid {
-  border-color: red; /* Visual cue for validation errors */
+  border-color: red;
 }
 
 .error-message {
   color: red;
   font-size: 0.75rem;
-  margin-top: 4px; /* Spacing above error text */
+  margin-top: 4px; 
 }
 </style>

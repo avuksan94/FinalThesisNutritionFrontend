@@ -1,33 +1,52 @@
 <template>
-  <div class="row justify-content-center">
-    <div v-if="isLoading" class="pixel-spinner">
-      <div class="pixel-spinner-inner"></div>
+  <custom-pop-up v-if="popup.isVisible" :title="popup.title" :message="popup.message" :confirm="popup.confirm"
+    :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
+  <div v-if="ingredients.length > 0">
+    <div class="row justify-content-center">
+      <div v-if="isLoading" class="pixel-spinner">
+        <div class="pixel-spinner-inner"></div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <button class="orange-button" @click="generateItems">
+        {{ $t('generate_recipe.generate') }}
+      </button>
+    </div>
+    <br><br>
+    <div class="card flex justify-content-center">
+      <Listbox v-model="selectedIngredients" :options="ingredients" multiple optionLabel="name"
+        class="w-full md:w-14rem" />
     </div>
   </div>
-  <div class="row justify-content-center">
-    <button class="orange-button" @click="generateItems">
-      {{ $t('generate_recipe.generate') }}
-    </button>
-  </div>
-  <br><br>
-  <div class="card flex justify-content-center">
-    <Listbox v-model="selectedIngredients" :options="ingredients" multiple optionLabel="name" class="w-full md:w-14rem" />
+  <div v-else>
+    <NothingHereAddIngredientsComponent />
   </div>
 </template>
 
+
 <script>
-import Listbox from 'primevue/listbox'; // Ensure you import Listbox from your component library
+import Listbox from 'primevue/listbox';
 import axios from 'axios';
+import NothingHereAddIngredientsComponent from '../PlaceHolderComponents/NothingHereAddIngredientsComponent.vue';
+import CustomPopUp from '../Notification/CustomPopUp.vue';
 
 export default {
   components: {
-    Listbox
+    Listbox,
+    NothingHereAddIngredientsComponent,
+    CustomPopUp
   },
   data() {
     return {
       isLoading: false,
       selectedIngredients: [],
-      ingredients: []
+      ingredients: [],
+      popup: {
+        isVisible: false,
+        title: '',
+        message: '',
+        confirm: false
+      }
     };
   },
   mounted() {
@@ -56,7 +75,8 @@ export default {
     },
     async generateItems() {
       if (this.selectedIngredients.length === 0) {
-        alert('Please select at least one ingredient');
+        //alert(this.$t('warning_messages.select_ingredients'));
+        this.setPopUpMessages('INFO', this.$t('warning_messages.select_ingredients'));
         return;
       }
 
@@ -87,8 +107,21 @@ export default {
       } catch (error) {
         console.error('Error generating recipe:', error);
         this.isLoading = false;
-        alert('Failed to generate recipe. Please try again.');
+        //alert(this.$t('warning_messages.something_went_wrong'));
+        this.setPopUpMessages('ERROR', this.$t('warning_messages.something_went_wrong'));
       }
+    },
+    handlePopupConfirm() {
+      this.popup.isVisible = false;
+    },
+    handlePopupCancel() {
+      this.popup.isVisible = false;
+    },
+    setPopUpMessages(messageLevel, message) {
+      this.popup.isVisible = true;
+      this.popup.title = messageLevel;
+      this.popup.message = message;
+      this.popup.confirm = false;
     }
   }
 }
@@ -108,7 +141,7 @@ export default {
 }
 
 :deep .p-listbox-item.p-highlight {
-    background-color: #ffd480;
+  background-color: #ffd480;
 }
 
 .orange-button {
@@ -124,4 +157,5 @@ export default {
 
 .orange-button:hover {
   background-color: darkorange;
-}</style>
+}
+</style>

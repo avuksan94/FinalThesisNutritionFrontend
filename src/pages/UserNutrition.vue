@@ -80,8 +80,8 @@
 }
 
 .chart-row .col-6 .card {
-  margin-right: 10px; /* Add right margin to the left chart container */
-  margin-left: 10px;  /* Add left margin to the right chart container */
+  margin-right: 10px; 
+  margin-left: 10px; 
 }
 
 

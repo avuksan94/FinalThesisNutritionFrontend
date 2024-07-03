@@ -1,4 +1,6 @@
 <template>
+  <custom-pop-up v-if="popup.isVisible" :title="popup.title" :message="popup.message" :confirm="popup.confirm"
+  :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
   <card class="card" :title="$t('user_profile_form.title')">
     <div>
       <form @submit.prevent="updateProfile">
@@ -88,8 +90,12 @@
 import axios from "axios";
 import { required, email } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
+import CustomPopUp from '../Notification/CustomPopUp.vue';
 
 export default {
+  components : {
+    CustomPopUp
+  },
   data() {
     return {
       user: {
@@ -101,6 +107,12 @@ export default {
         phoneNumber: "",
       },
       error: null,
+      popup: {
+        isVisible: false,
+        title: '',
+        message: '',
+        confirm: false
+      }
     };
   },
   validations() {
@@ -141,7 +153,8 @@ export default {
         try {
           await axios.put(url, userData);
           this.$store.commit('setUserInfoUpdated', true);
-          alert("Profile updated successfully!");
+          //alert(this.$t('info_messages.success_update'));
+          this.setPopUpMessages('INFO', this.$t('info_messages.success_update'));
         } catch (error) {
           console.error("Error updating user data:", error);
           this.error = this.$t('edit_profile_errors.failed_to_update');
@@ -174,6 +187,18 @@ export default {
           console.error("Response status:", error.response.status);
         }
       }
+    },
+    handlePopupConfirm() {
+      this.popup.isVisible = false;
+    },
+    handlePopupCancel() {
+      this.popup.isVisible = false;
+    },
+    setPopUpMessages(messageLevel, message) {
+      this.popup.isVisible = true;
+      this.popup.title = messageLevel;
+      this.popup.message = message;
+      this.popup.confirm = false;
     }
   },
   mounted() {
@@ -184,13 +209,13 @@ export default {
 
 <style scoped>
 .is-invalid {
-  border-color: red; /* Visual cue for validation errors */
+  border-color: red; 
 }
 
 .error-message {
   color: red;
   font-size: 0.75rem;
-  margin-top: 4px; /* Spacing above error text */
+  margin-top: 4px;
 }
 </style>
 
