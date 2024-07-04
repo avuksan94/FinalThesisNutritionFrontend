@@ -17,6 +17,7 @@ import MealPlanCard from './Recipe/MealPlanCard.vue'
     },
   };
   </script>
+  
   <style scoped>
   @media (max-width: 991px) {
     .user-card, .user-health-card, .edit-profile-form {

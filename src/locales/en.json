@@ -375,5 +375,10 @@
       "not_found" : {
         "message_one" : "SEEMS THERES NOTHING HERE...",
         "message_two" : "ENDLESS VOID"
-      }
+      },
+      "instructions" : {
+        "message_one" : "IM A LITTLE LOST...",
+        "message_two" : "HELP!",
+        "message_three" : "Access the full instructions here"
+    }
 }

@@ -59,8 +59,14 @@ export default createStore({
     deleteIngredient(state, ingredientId) {
       state.ingredients = state.ingredients.filter(ingredient => ingredient.id !== ingredientId);
     },
+    removeIngredient(state, id) {
+      const index = state.ingredients.findIndex(ing => ing.id === id);
+      if (index !== -1) {
+        state.ingredients.splice(index, 1);
+      }
+    },
     setCurrentIngredient(state, ingredient) {
-      state.currentIngredient = ingredient; 
+      state.currentIngredient = ingredient;
     },
     hideUpdateForm(state) {
       state.currentIngredient = null;

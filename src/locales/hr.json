@@ -375,5 +375,11 @@
       "not_found" : {
         "message_one" : "IZGLEDA DA OVDJE NEMA NIŠTA...",
         "message_two" : "PRAZNINA..."
-      }
+      },
+      "instructions" : {
+        "message_one" : "MALO SAM IZGUBLJEN...",
+        "message_two" : "UPOMOĆ!",
+        "message_three" : "Pogledaj detaljne upute"
+    }
+
 }

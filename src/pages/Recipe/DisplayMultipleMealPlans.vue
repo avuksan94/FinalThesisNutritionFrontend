@@ -4,10 +4,10 @@
       <div class="meal-plan-header">
         <h3>{{ $t('generate_meal_plan.meal_plan_for') }} {{ formatDate(mealPlan.createdAt) }}</h3>
         <div class="row justify-content-center">
-        <button @click="deleteUserMealPlan(mealPlan.id)" class="delete-mp-btn">
-          <i class="bi bi-eraser"></i> {{ $t('meal_plan_card.meal_card_delete_meal') }}
-        </button>
-      </div>
+          <button @click="deleteUserMealPlan(mealPlan.id)" class="delete-mp-btn">
+            <i class="bi bi-eraser"></i> {{ $t('meal_plan_card.meal_card_delete_meal') }}
+          </button>
+        </div>
       </div>
       <div class="meal-plan-details">
         <div class="meals-container">
@@ -34,12 +34,12 @@
                 </ol>
                 <h6>{{ $t('recipe_card.nutrition_summary') }}</h6>
                 <ul>
-                  <li>{{ $t('recipe_card.total_calories') }} {{ meal.recipe.nutritionSummary.totalCalories }}g</li>
-                  <li>{{ $t('recipe_card.total_protein') }} {{ meal.recipe.nutritionSummary.totalProtein }}g</li>
-                  <li>{{ $t('recipe_card.total_carbs') }} {{ meal.recipe.nutritionSummary.totalCarbs }}g</li>
-                  <li>{{ $t('recipe_card.total_fats') }} {{ meal.recipe.nutritionSummary.totalFats }}g</li>
-                  <li>{{ $t('recipe_card.total_fiber') }} {{ meal.recipe.nutritionSummary.totalFiber }}g</li>
-                  <li>{{ $t('recipe_card.total_sugar') }} {{ meal.recipe.nutritionSummary.totalSugar }}g</li>
+                  <li>{{ $t('recipe_card.total_calories') }} {{ meal.recipe.nutritionSummary.totalCalories / meal.recipe.servings }}g</li>
+                  <li>{{ $t('recipe_card.total_protein') }} {{ meal.recipe.nutritionSummary.totalProtein / meal.recipe.servings }}g</li>
+                  <li>{{ $t('recipe_card.total_carbs') }} {{ meal.recipe.nutritionSummary.totalCarbs / meal.recipe.servings }}g</li>
+                  <li>{{ $t('recipe_card.total_fats') }} {{ meal.recipe.nutritionSummary.totalFats / meal.recipe.servings }}g</li>
+                  <li>{{ $t('recipe_card.total_fiber') }} {{ meal.recipe.nutritionSummary.totalFiber / meal.recipe.servings }}g</li>
+                  <li>{{ $t('recipe_card.total_sugar') }} {{ meal.recipe.nutritionSummary.totalSugar / meal.recipe.servings }}g</li>
                 </ul>
                 <h6>{{ $t('recipe_card.cooking_time') }}</h6>
                 <p>{{ meal.recipe.cookingTime }} {{ $t('recipe_card.time_value') }}</p>
@@ -54,7 +54,7 @@
                   :message="notifications[mealIndex].message" :type="notifications[mealIndex].type"
                   :icon="notifications[mealIndex].icon" :color="notifications[mealIndex].color"
                   :size="notifications[mealIndex].size" />
-                <button @click.stop="handleAddingCalories(mealIndex, meal.recipe.nutritionSummary)"
+                <button @click.stop="handleAddingCalories(mealIndex, meal.recipe.nutritionSummary, meal.recipe.servings)"
                   class="just-ate-this-btn">
                   <i class="bi bi-activity"></i> {{ $t('recipe_card.add_to_nutrition_tracker') }}
                 </button>
@@ -66,7 +66,7 @@
     </div>
   </div>
   <nothing-here-component v-else></nothing-here-component>
-</template>  
+</template>
 
 <script>
 import axios from 'axios';
@@ -105,9 +105,9 @@ export default {
         this.notifications[index].visible = false;
       }, 3000);
     },
-    handleAddingCalories(index, nutritionData) {
+    handleAddingCalories(index, nutritionData, servings) {
       this.triggerNotification(index, this.$t('recipe_card.add_to_nutrition_message'));
-      this.addNutrientsToTracker(nutritionData);
+      this.addNutrientsToTracker(nutritionData, servings);
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString('en-GB');
@@ -130,7 +130,7 @@ export default {
         console.error("Error fetching user meal plans:", error);
       }
     },
-    async addNutrientsToTracker(nutritionData) {
+    async addNutrientsToTracker(nutritionData, servings) {
       const username = localStorage.getItem("nutrioUser");
       const token = localStorage.getItem("token");
 
@@ -140,12 +140,12 @@ export default {
       }
 
       const dataToSend = {
-        calories: nutritionData.totalCalories,
-        protein: nutritionData.totalProtein,
-        carbs: nutritionData.totalCarbs,
-        fats: nutritionData.totalFats,
-        fiber: nutritionData.totalFiber,
-        sugar: nutritionData.totalSugar
+        calories: nutritionData.totalCalories / servings,
+        protein: nutritionData.totalProtein / servings,
+        carbs: nutritionData.totalCarbs / servings,
+        fats: nutritionData.totalFats / servings,
+        fiber: nutritionData.totalFiber / servings,
+        sugar: nutritionData.totalSugar / servings
       };
 
       const urlUser = `/nutritionUpdateTrackersByUsername/${username}`;
@@ -173,7 +173,6 @@ export default {
         console.error("Error deleting the meal plan:", error);
       }
     }
-
   }
 };
 </script>

@@ -1,85 +1,83 @@
 <template>
     <div>
-    <div v-if="recipes.length > 0" class="recipe-list">
-        <div v-for="(recipe, index) in recipes" :key="index" class="card-recipe" :class="{ expanded: recipe.visible }"
-            @click="toggleVisibility(recipe)">
-            <div>
-                <div class="author">
-                    <h4 class="title">
-                        {{ recipe.title }}
-                        <br />
-                        <small>{{ recipe.description }}</small>
-                    </h4>
-                </div>
-                <div v-if="recipe.visible" class="recipe-details">
-                    <br>
-                    <div class="recipe-left">
-                        <h5>{{ $t('recipe_card.ingredients') }}</h5>
-                        <ul>
-                            <li v-for="ingredient in recipe.ingredients" :key="ingredient.ingredientId">
-                                {{ ingredient.quantity }} {{ ingredient.unit }} - {{ ingredient.name }}
-                            </li>
-                        </ul>
-
-                        <h5>{{ $t('recipe_card.preparation_steps') }}</h5>
-                        <ol>
-                            <li v-for="(step, index) in recipe.preparationSteps" :key="index">
-                                {{ step }}
-                            </li>
-                        </ol>
-                        <notification-component v-model:visible="showNotification" :message="notificationMessage"
-                            :type="notificationType" :icon="notificationIcon" :color="notificationColor"
-                            :size="notificationSize"></notification-component>
-                        <button @click.stop="handleAddingCalories(recipe.nutritionSummary)" class="just-ate-this-btn">
-                            <i class="bi bi-activity"></i> {{ $t('recipe_card.add_to_nutrition_tracker') }}
-                        </button>
-                        <br>
-                        <button @click.stop="handleRemovingRecipe(recipe.id)" class="delete-recipe-btn">
-                            {{ $t('recipe_card.delete_recipe') }}
-                        </button>
-
+        <div v-if="recipes.length > 0" class="recipe-list">
+            <div v-for="(recipe, index) in recipes" :key="index" class="card-recipe" :class="{ expanded: recipe.visible }"
+                @click="toggleVisibility(recipe)">
+                <div>
+                    <div class="author">
+                        <h4 class="title">
+                            {{ recipe.title }}
+                            <br />
+                            <small>{{ recipe.description }}</small>
+                        </h4>
                     </div>
-                    <div class="recipe-right">
-                        <h5>{{ $t('recipe_card.nutrition_summary') }}</h5>
-                        <ul>
-                            <li>{{ $t('recipe_card.total_calories') }} {{ recipe.nutritionSummary.totalCalories }}g</li>
-                            <li>{{ $t('recipe_card.total_protein') }} {{ recipe.nutritionSummary.totalProtein }}g</li>
-                            <li>{{ $t('recipe_card.total_carbs') }} {{ recipe.nutritionSummary.totalCarbs }}g</li>
-                            <li>{{ $t('recipe_card.total_fats') }} {{ recipe.nutritionSummary.totalFats }}g</li>
-                            <li>{{ $t('recipe_card.total_fiber') }} {{ recipe.nutritionSummary.totalFiber }}g</li>
-                            <li>{{ $t('recipe_card.total_sugar') }} {{ recipe.nutritionSummary.totalSugar }}g</li>
-                        </ul>
-                        <h5>{{ $t('recipe_card.cooking_time') }}</h5>
-                        <p>{{ recipe.cookingTime }} {{ $t('recipe_card.time_value') }}</p>
-                        <h5>{{ $t('recipe_card.servings') }}</h5>
-                        <p>{{ recipe.servings }}</p>
-                        <div v-if="recipe.notes" class="notes">
-                            <h5>{{ $t('recipe_card.notes') }}</h5>
-                            <p>{{ recipe.notes }}</p>
+                    <div v-if="recipe.visible" class="recipe-details">
+                        <br>
+                        <div class="recipe-left">
+                            <h5>{{ $t('recipe_card.ingredients') }}</h5>
+                            <ul>
+                                <li v-for="ingredient in recipe.ingredients" :key="ingredient.ingredientId">
+                                    {{ ingredient.quantity }} {{ ingredient.unit }} - {{ ingredient.name }}
+                                </li>
+                            </ul>
+
+                            <h5>{{ $t('recipe_card.preparation_steps') }}</h5>
+                            <ol>
+                                <li v-for="(step, index) in recipe.preparationSteps" :key="index">
+                                    {{ step }}
+                                </li>
+                            </ol>
+                            <notification-component v-model:visible="showNotification" :message="notificationMessage"
+                                :type="notificationType" :icon="notificationIcon" :color="notificationColor"
+                                :size="notificationSize"></notification-component>
+                            <button @click.stop="handleAddingCalories(recipe)" class="just-ate-this-btn">
+                                <i class="bi bi-activity"></i> {{ $t('recipe_card.add_to_nutrition_tracker') }}
+                            </button>
+                            <br>
+                            <button @click.stop="handleRemovingRecipe(recipe.id)" class="delete-recipe-btn">
+                                {{ $t('recipe_card.delete_recipe') }}
+                            </button>
                         </div>
-                        <div v-if="recipe.healthWarning" class="health-warning">
-                            <h5>{{ $t('recipe_card.health_warning') }}</h5>
-                            <p v-if="recipe.healthWarning">{{ recipe.healthWarning }}</p>
+                        <div class="recipe-right">
+                            <h5>{{ $t('recipe_card.nutrition_summary') }}</h5>
+                            <ul>
+                                <li>{{ $t('recipe_card.total_calories') }} {{ recipe.nutritionSummary.totalCalories }}g</li>
+                                <li>{{ $t('recipe_card.total_protein') }} {{ recipe.nutritionSummary.totalProtein }}g</li>
+                                <li>{{ $t('recipe_card.total_carbs') }} {{ recipe.nutritionSummary.totalCarbs }}g</li>
+                                <li>{{ $t('recipe_card.total_fats') }} {{ recipe.nutritionSummary.totalFats }}g</li>
+                                <li>{{ $t('recipe_card.total_fiber') }} {{ recipe.nutritionSummary.totalFiber }}g</li>
+                                <li>{{ $t('recipe_card.total_sugar') }} {{ recipe.nutritionSummary.totalSugar }}g</li>
+                            </ul>
+                            <h5>{{ $t('recipe_card.cooking_time') }}</h5>
+                            <p>{{ recipe.cookingTime }} {{ $t('recipe_card.time_value') }}</p>
+                            <h5>{{ $t('recipe_card.servings') }}</h5>
+                            <p>{{ recipe.servings }}</p>
+                            <div v-if="recipe.notes" class="notes">
+                                <h5>{{ $t('recipe_card.notes') }}</h5>
+                                <p>{{ recipe.notes }}</p>
+                            </div>
+                            <div v-if="recipe.healthWarning" class="health-warning">
+                                <h5>{{ $t('recipe_card.health_warning') }}</h5>
+                                <p v-if="recipe.healthWarning">{{ recipe.healthWarning }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <nothing-here-component v-else></nothing-here-component>
+        <nothing-here-component v-else></nothing-here-component>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-import NotificationComponent from "../Notification/NotificationComponent.vue"
-import NothingHereComponent from "../PlaceHolderComponents/NothingHereComponent.vue"
+import NotificationComponent from "../Notification/NotificationComponent.vue";
+import NothingHereComponent from "../PlaceHolderComponents/NothingHereComponent.vue";
 
 export default {
     components: {
         NotificationComponent,
         NothingHereComponent
-        
     },
     data() {
         return {
@@ -104,12 +102,12 @@ export default {
             this.notificationSize = size;
             this.showNotification = true;
         },
-        handleAddingCalories(nutritionData) {
+        handleAddingCalories(recipe) {
             this.triggerNotification('Added the meal for nutrition tracking', 'success', '✓', '#3eb27c', 'small');
-            this.addNutrientsToTracker(nutritionData);
+            this.addNutrientsToTracker(recipe.nutritionSummary, recipe.servings);
         },
-        handleRemovingRecipe(recipe) {
-            this.deleteUserRecipe(recipe);
+        handleRemovingRecipe(recipeId) {
+            this.deleteUserRecipe(recipeId);
             this.fetchUserRecipes();
         },
         async fetchUserRecipes() {
@@ -140,7 +138,7 @@ export default {
             });
             recipe.visible = !recipe.visible;
         },
-        async addNutrientsToTracker(nutritionData) {
+        async addNutrientsToTracker(nutritionData, servings) {
             const username = localStorage.getItem("nutrioUser");
             const token = localStorage.getItem("token");
 
@@ -150,12 +148,12 @@ export default {
             }
 
             const dataToSend = {
-                calories: nutritionData.totalCalories,
-                protein: nutritionData.totalProtein,
-                carbs: nutritionData.totalCarbs,
-                fats: nutritionData.totalFats,
-                fiber: nutritionData.totalFiber,
-                sugar: nutritionData.totalSugar
+                calories: nutritionData.totalCalories / servings,
+                protein: nutritionData.totalProtein / servings,
+                carbs: nutritionData.totalCarbs / servings,
+                fats: nutritionData.totalFats / servings,
+                fiber: nutritionData.totalFiber / servings,
+                sugar: nutritionData.totalSugar / servings
             };
 
             const urlUser = `/nutritionUpdateTrackersByUsername/${username}`;

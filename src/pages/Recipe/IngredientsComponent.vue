@@ -1,28 +1,28 @@
 <template>
     <div class="form-container">
-    <div class="row ">
-        <UpdateIngredient v-if="currentIngredient" :selectedIngredient="currentIngredient"
-            @ingredientUpdated="refreshIngredients" @updateComplete="refreshIngredients"  @closeForm="closeForm"/>
-    </div>
-    <div >
-        <DataTable v-if="ingredients && ingredients.length" :value="ingredients"
-        sortMode="multiple"
-        paginator :rows="10"
-            :rowsPerPageOptions="[5, 10, 20, 50]" >
-            <Column field="name" :header="$t('ingredients.ingredient_name')" sortable></Column>
-            <Column field="quantity" :header="$t('ingredients.ingredient_quantity')" sortable></Column>
-            <Column field="unit" :header="$t('ingredients.ingredient_unit')" sortable></Column>
-            <Column>
-                <template #body="slotProps">
-                    <div class="row justify-content-center">
-                        <Button icon="bi bi-pencil" class="blue-button" @click="editIngredient(slotProps.data)"></Button>
-                        <Button icon="bi bi-eraser" class="red-button" @click="deleteIngredient(slotProps.data)"></Button>
-                    </div>
-                </template>
-            </Column>
-        </DataTable>
-        <nothing-here-ingredients-component v-else></nothing-here-ingredients-component>
-    </div>
+        <div class="row ">
+            <UpdateIngredient v-if="currentIngredient" :selectedIngredient="currentIngredient"
+                @ingredientUpdated="refreshIngredients" @updateComplete="refreshIngredients" @closeForm="closeForm" />
+        </div>
+        <div>
+            <DataTable v-if="ingredients && ingredients.length" :value="ingredients" sortMode="multiple" paginator
+                :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]">
+                <Column field="name" :header="$t('ingredients.ingredient_name')" sortable></Column>
+                <Column field="quantity" :header="$t('ingredients.ingredient_quantity')" sortable></Column>
+                <Column field="unit" :header="$t('ingredients.ingredient_unit')" sortable></Column>
+                <Column>
+                    <template #body="slotProps">
+                        <div class="row justify-content-center">
+                            <Button icon="bi bi-pencil" class="blue-button"
+                                @click="editIngredient(slotProps.data)"></Button>
+                            <Button icon="bi bi-eraser" class="red-button"
+                                @click="deleteIngredient(slotProps.data)"></Button>
+                        </div>
+                    </template>
+                </Column>
+            </DataTable>
+            <nothing-here-ingredients-component v-else></nothing-here-ingredients-component>
+        </div>
     </div>
 </template>
   
@@ -79,7 +79,7 @@ export default {
                 await axios.delete(`/ingredientTrackers/${ingredient.id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                this.fetchUserIngredients(); 
+                this.$store.commit('removeIngredient', ingredient.id);
             } catch (error) {
                 console.error("Error deleting ingredient:", error);
             }
@@ -106,6 +106,7 @@ export default {
     margin: 20px auto;
     padding: 30px;
 }
+
 .red-button,
 .blue-button {
     font-size: 16px;
@@ -121,7 +122,7 @@ export default {
     align-items: center;
     justify-content: center;
     padding: 0;
-    margin-right:10px;
+    margin-right: 10px;
 }
 
 .red-button {
@@ -134,11 +135,12 @@ export default {
 
 .blue-button {
     background-color: orange;
+
     &:hover {
         background-color: darkorange;
     }
+
     &:focus {
         box-shadow: 0 0 0 2px rgba(255, 165, 0, 0.5);
     }
-}
-</style>
+}</style>

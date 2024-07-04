@@ -5,7 +5,7 @@
   </template>
   
   <script>
-  import InitialHealthTrackerComponent from '../pages/Heath/InitialHealthTrackerComponent.vue';
+  import InitialHealthTrackerComponent from '../pages/Health/InitialHealthTrackerComponent.vue';
   
   export default {
     components: {
