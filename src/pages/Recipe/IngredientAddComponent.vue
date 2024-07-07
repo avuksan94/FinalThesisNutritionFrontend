@@ -9,7 +9,14 @@
             <div class="p-field">
                 <label for="name">{{ $t('ingredients_add_component.ingredient_name') }}</label>
                 <InputText id="name" v-model="item.name"
-                    :placeholder="$t('ingredients_add_component.ingredient_name_placeholder')" />
+                    :placeholder="$t('ingredients_add_component.ingredient_name_placeholder')"
+                    :class="{ 'is-invalid': v$.item.name.$error }" />
+                <div v-if="v$.item.name.$error" class="error-message">
+                    <span v-if="v$.item.name.required.$invalid">{{ $t('ingredients_add_component.error_one') }}</span>
+                    <span v-else-if="v$.item.name.maxLength.$invalid">{{ $t('ingredients_add_component.error_two') }}</span>
+                    <span v-else-if="v$.item.name.onlyLetters.$invalid">{{ $t('ingredients_add_component.error_three')
+                    }}</span>
+                </div>
             </div>
 
             <div class="p-field">
@@ -20,12 +27,8 @@
 
             <div class="p-field">
                 <label for="unit">{{ $t('ingredients_add_component.ingredient_unit') }}</label>
-                <Dropdown id="dietDropdown" 
-                v-model="item.unit" 
-                :options="measurementOptions" 
-                optionLabel="label"
-                optionValue="value"
-                :placeholder="$t('ingredients_add_component.ingredient_unit_placeholder')" />
+                <Dropdown id="dietDropdown" v-model="item.unit" :options="measurementOptions" optionLabel="label"
+                    optionValue="value" :placeholder="$t('ingredients_add_component.ingredient_unit_placeholder')" />
             </div>
 
             <div class="row justify-content-center">
@@ -44,6 +47,14 @@ import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 import Textarea from 'primevue/textarea';
 import Dropdown from 'primevue/dropdown';
+import { required, maxLength } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+
+const onlyLetters = (value) => {
+    if (value === '') return true;
+    return /^[a-zA-ZÀ-ž\s]*$/.test(value);
+};
+
 
 export default {
     components: {
@@ -59,7 +70,7 @@ export default {
                 notes: ''
             },
             measurementOptions: [
-                { label: this.$t('measurement.empty'), value: ''},
+                { label: this.$t('measurement.empty'), value: '' },
                 { label: this.$t('measurement.gram'), value: this.$t('measurement.gram') },
                 { label: this.$t('measurement.kilogram'), value: this.$t('measurement.kilogram') },
                 { label: this.$t('measurement.milligram'), value: this.$t('measurement.milligram') },
@@ -88,15 +99,33 @@ export default {
             ]
         };
     },
+    validations() {
+        return {
+            item: {
+                name: { required, maxLength: maxLength(50), onlyLetters }
+            }
+        }
+    },
+    setup() {
+        const v$ = useVuelidate();
+        return { v$ };
+    },
     methods: {
         ...mapMutations(['addIngredient']),
         toggleFormVisibility() {
             this.formVisible = !this.formVisible;
         },
         addItem() {
-            this.addIngredient(this.item);
-            this.resetForm();
-            this.formVisible = false;
+            this.v$.$validate().then((valid) => {
+                console.log('Validation state:', this.v$.item.name);
+                if (valid) {
+                    this.addIngredient(this.item);
+                    this.resetForm();
+                    this.formVisible = false;
+                } else {
+                    console.error('Validation failed.');
+                }
+            });
         },
         async addIngredient(ingredientData) {
             console.log("Sending data:", ingredientData);

@@ -289,10 +289,14 @@
       },
       "logout" : "Odjava",
       "edit_profile_errors": {
-        "first_name": "Ime je obavezno.",
-        "last_name": "Prezime je obavezno.",
-        "phone_num": "Potreban je ispravan broj telefona.",
-        "email": "Potrebna je ispravna email adresa.",
+        "first_name_required": "Ime je obavezno.",
+        "first_name_too_long" : "Ime je predugačko mora biti manje od 50 slova.",
+        "last_name_required": "Prezime je obavezno.",
+        "last_name_too_long" : "Prezime je predugačko mora biti manje od 50 slova.",
+        "phone_invalid": "Potreban je ispravan broj telefona.",
+        "phone_required" : "Potrebno je unesti broj telefona.",
+        "email_invalid": "Potrebna je ispravna email adresa.",
+        "email_required" : "Potrebno je unesti email adresu.",
         "failed_to_update" : "Ažuriranje profila nije uspjelo, pokušajte ponovno.",
         "error" : "Ispravite greške u obrascu."
       },
@@ -311,7 +315,10 @@
         "ingredient_unit_placeholder" : "Unesite jedinicu mjere",
         "ingredient_notes" : "Napomene",
         "ingredient_save" : "Spremi",
-        "ingredient_cancel" : "Odustani"
+        "ingredient_cancel" : "Odustani",
+        "error_one" : "Ovo polje je obvezno.",
+        "error_two" : "Ime mora biti kraće od 50 znakova.",
+        "error_three" : "Ime ne smije sadržavati posebne znakove (.,/*) ili brojeve!"
     },
     "ingredients" : {
         "ingredient_name" : "Naziv namirnice",

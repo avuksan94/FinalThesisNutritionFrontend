@@ -42,7 +42,7 @@ export default {
     userInfoUpdated(newVal) {
       if (newVal) {
         this.fetchUserData();
-        this.$store.commit('setHealthInfoUpdated', false); 
+        this.$store.commit('setUserInfoUpdated', false); 
       }
     }
   },

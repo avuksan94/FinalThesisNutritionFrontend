@@ -11,14 +11,16 @@
               <label for="firstName">First Name</label>
               <input type="text" id="firstName" v-model="form.firstName" placeholder="First Name">
               <span class="error-message" v-if="v$.form.firstName.$error">
-                First name is required.
+                <span v-if="v$.form.firstName.required.$invalid">First name is required.</span>
+                <span v-else-if="v$.form.firstName.maxLength.$invalid">First name must be less than 50 characters.</span>
               </span>
             </div>
             <div class="input-group">
               <label for="lastName">Last Name</label>
               <input type="text" id="lastName" v-model="form.lastName" placeholder="Last Name">
               <span class="error-message" v-if="v$.form.lastName.$error">
-                Last name is required.
+                <span v-if="v$.form.lastName.required.$invalid">Last name is required.</span>
+                <span v-else-if="v$.form.lastName.maxLength.$invalid">Last name must be less than 50 characters.</span>
               </span>
             </div>
           </div>
@@ -27,14 +29,17 @@
               <label for="username">Username</label>
               <input type="text" id="username" v-model="form.username" placeholder="Username">
               <span class="error-message" v-if="v$.form.username.$error">
-                Username is required.
+                <span v-if="v$.form.username.required.$invalid">Username is required.</span>
+                <span v-if="v$.form.username.minLength.$invalid">Username must be at least 3 characters long.</span>
+                <span v-if="v$.form.username.maxLength.$invalid">Username must be less than 30 characters long.</span>
               </span>
             </div>
             <div class="input-group">
               <label for="email">Email</label>
               <input type="email" id="email" v-model="form.email" placeholder="Email">
               <span class="error-message" v-if="v$.form.email.$error">
-                A valid email is required.
+                <span v-if="v$.form.email.required.$invalid">Email is required.</span>
+                <span v-else-if="v$.form.email.email.$invalid">Please enter a valid email address.</span>
               </span>
             </div>
           </div>
@@ -43,14 +48,20 @@
               <label for="phoneNumber">Phone Number</label>
               <input type="text" id="phoneNumber" v-model="form.phoneNumber" placeholder="Phone Number">
               <span class="error-message" v-if="v$.form.phoneNumber.$error">
-                Phone number is required.
+                <span v-if="v$.form.phoneNumber.required.$invalid">Phone number is required.</span>
+                <span v-else-if="v$.form.phoneNumber.phoneNumberPattern.$invalid">Invalid phone number format.</span>
               </span>
             </div>
             <div class="input-group">
               <label for="password">Password</label>
               <input type="password" id="password" v-model="form.password" placeholder="Password">
               <span class="error-message" v-if="v$.form.password.$error">
-                Password is required.
+                <span v-if="v$.form.password.required.$invalid">Password is required.</span>
+                <span v-else-if="v$.form.password.minLength.$invalid">Password must be at least 8 characters long.</span>
+                <span v-else-if="v$.form.password.maxLength.$invalid">Password must be less than 128 characters
+                  long.</span>
+                <span v-else-if="v$.form.password.strongPassword.$invalid">Password must be at least 8 characters long,
+                  include uppercase and lowercase letters, a number, and a special character.</span>
               </span>
             </div>
             <div class="input-group">
@@ -79,12 +90,25 @@
   </div>
 </template>
 
+
 <script>
 import axios from 'axios';
 import DisclaimerComponent from './Disclaimer.vue';
-import { required, email } from '@vuelidate/validators';
+import { required, email, minLength, maxLength, helpers } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 import CustomPopUp from '../Notification/CustomPopUp.vue';
+
+const phoneNumberPattern = (value) => {
+  if (!value) return true;
+  return /^(?:\+385\s)?0?9\d\s?\d{2}\s?\d{2}\s?\d{3}$/.test(value);
+};
+
+
+const strongPassword = (value) => {
+  if (!value) return true;
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
+};
+
 
 export default {
   components: {
@@ -116,12 +140,12 @@ export default {
   validations() {
     return {
       form: {
-        firstName: { required },
-        lastName: { required },
-        username: { required },
+        firstName: { required, maxLength: maxLength(50) },
+        lastName: { required, maxLength: maxLength(50) },
+        username: { required, minLength: minLength(3), maxLength: maxLength(30) },
         email: { required, email },
-        phoneNumber: { required },
-        password: { required },
+        phoneNumber: { required, phoneNumberPattern },
+        password: { required, strongPassword, minLength: minLength(8), maxLength: maxLength(128) },
         language: { required }
       }
     }
@@ -148,12 +172,10 @@ export default {
           console.log("Registration successful:", response.data);
           this.$router.push('/login');
         } catch (error) {
-          //alert("Username or email already in use!");
           this.popup.isVisible = true;
           this.popup.title = 'Registration Error';
           this.popup.message = 'Username or email already in use!';
           this.popup.confirm = false;
-
           console.error('Registration failed:', error);
           this.error = "Failed to register. Please check your details and try again.";
         }

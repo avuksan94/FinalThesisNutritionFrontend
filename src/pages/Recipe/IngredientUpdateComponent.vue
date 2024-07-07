@@ -4,7 +4,14 @@
             <div class="p-field">
                 <label for="name">{{ $t('ingredients_add_component.ingredient_name') }}</label>
                 <input type="text" id="name" v-model="editableIngredient.name"
-                    :placeholder="$t('ingredients_add_component.ingredient_name_placeholder')" class="input-style" />
+                    :placeholder="$t('ingredients_add_component.ingredient_name_placeholder')" class="input-style"
+                    :class="{ 'is-invalid': v$.editableIngredient.name.$error }" />
+                <div v-if="v$.editableIngredient.name.$error" class="error-message">
+                    <span v-if="v$.editableIngredient.name.required.$invalid">{{ $t('ingredients_add_component.error_one') }}</span>
+                    <span v-else-if="v$.editableIngredient.name.maxLength.$invalid">{{ $t('ingredients_add_component.error_two') }}</span>
+                    <span v-else-if="v$.editableIngredient.name.onlyLetters.$invalid">{{ $t('ingredients_add_component.error_three')
+                    }}</span>
+                </div>
             </div>
             <div class="p-field">
                 <label for="quantity">{{ $t('ingredients_add_component.ingredient_quantity') }}</label>
@@ -19,7 +26,7 @@
             <div class="button-container">
                 <button type="submit" class="green-button">{{ $t('ingredients_add_component.ingredient_save') }}</button>
                 <button type="button" class="cancel-button"
-                    @click="$emit('closeForm')">{{ $t('ingredients_add_component.ingredient_cancel') }}</button>
+                    @click="closeForm">{{ $t('ingredients_add_component.ingredient_cancel') }}</button>
             </div>
         </form>
     </div>
@@ -28,6 +35,13 @@
 <script>
 import axios from 'axios';
 import Dropdown from 'primevue/dropdown';
+import { required, maxLength } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core';
+
+const onlyLetters = (value) => {
+    if (value === '') return true;
+    return /^[a-zA-ZÀ-ž\s]*$/.test(value);
+};
 
 export default {
     props: ['selectedIngredient'],
@@ -67,6 +81,17 @@ export default {
     components: {
         Dropdown
     },
+    validations() {
+        return {
+            editableIngredient: {
+                name: { required, maxLength: maxLength(50), onlyLetters }
+            }
+        }
+    },
+    setup() {
+        const v$ = useVuelidate();
+        return { v$ };
+    },
     watch: {
         selectedIngredient: {
             handler(newValue) {
@@ -78,23 +103,25 @@ export default {
     },
     methods: {
         async submitUpdate() {
-            if (!this.editableIngredient.id) {
-                alert('Invalid ingredient data');
-                return;
-            }
-            const updateUrl = `/ingredientTrackers/${this.editableIngredient.id}`;
-            try {
-                const response = await axios.put(updateUrl, this.editableIngredient);
-                if (response.status === 200) {
-                    this.$emit('updateComplete');
+            this.v$.$validate().then(async (valid) => {
+                if (valid) {
+                    const updateUrl = `/ingredientTrackers/${this.editableIngredient.id}`;
+                    try {
+                        const response = await axios.put(updateUrl, this.editableIngredient);
+                        if (response.status === 200) {
+                            this.$emit('updateComplete');
+                        } else {
+                            console.error('Failed to update ingredient with status:', response.status);
+                            alert(`Failed to update ingredient. Server responded with status: ${response.status}`);
+                        }
+                    } catch (error) {
+                        console.error('Failed to update ingredient:', error);
+                        alert('Failed to update ingredient. Please check console for more details.');
+                    }
                 } else {
-                    console.error('Failed to update ingredient with status:', response.status);
-                    alert(`Failed to update ingredient. Server responded with status: ${response.status}`);
+                    console.error('Validation failed.');
                 }
-            } catch (error) {
-                console.error('Failed to update ingredient:', error);
-                alert('Failed to update ingredient. Please check console for more details.');
-            }
+            });
         },
         closeForm() {
             this.$emit('closeForm');
@@ -179,5 +206,15 @@ export default {
     &:hover {
         background-color: darkgreen;
     }
+}
+
+.error-message {
+    color: red;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.is-invalid {
+    border-color: red;
 }
 </style>

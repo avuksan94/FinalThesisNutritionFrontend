@@ -1,6 +1,6 @@
 <template>
   <custom-pop-up v-if="popup.isVisible" :title="popup.title" :message="popup.message" :confirm="popup.confirm"
-  :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
+    :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
   <card class="card" :title="$t('user_profile_form.title')">
     <div>
       <form @submit.prevent="updateProfile">
@@ -8,32 +8,23 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="email">{{ $t('user_profile_form.email') }}</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="Email"
-                v-model="user.email"
-                :class="{ 'is-invalid': v$.user.email.$error }"
-              />
+              <input type="email" class="form-control" id="email" placeholder="Email" v-model="user.email"
+                :class="{ 'is-invalid': v$.user.email.$error }" />
               <span v-if="v$.user.email.$error" class="error-message">
-                {{ $t('edit_profile_errors.email') }}
+                <span v-if="v$.user.email.required.$invalid">{{ $t('edit_profile_errors.email_required') }}</span>
+                <span v-else-if="v$.user.email.email.$invalid">{{ $t('edit_profile_errors.email_invalid') }}</span>
               </span>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="phoneNumber">{{ $t('user_profile_form.phone_number') }}</label>
-              <input
-                type="text"
-                class="form-control"
-                id="phoneNumber"
-                placeholder="Phone Number"
-                v-model="user.phoneNumber"
-                :class="{ 'is-invalid': v$.user.phoneNumber.$error }"
-              />
+              <input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number"
+                v-model="user.phoneNumber" :class="{ 'is-invalid': v$.user.phoneNumber.$error }" />
               <span v-if="v$.user.phoneNumber.$error" class="error-message">
-                {{ $t('edit_profile_errors.phone_num') }}
+                <span v-if="v$.user.phoneNumber.required.$invalid">{{ $t('edit_profile_errors.phone_required') }}</span>
+                <span v-else-if="v$.user.phoneNumber.phoneNumberPattern.$invalid">{{
+                  $t('edit_profile_errors.phone_invalid') }}</span>
               </span>
             </div>
           </div>
@@ -42,32 +33,25 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="firstName">{{ $t('user_profile_form.first_name') }}</label>
-              <input
-                type="text"
-                class="form-control"
-                id="firstName"
-                placeholder="First Name"
-                v-model="user.firstName"
-                :class="{ 'is-invalid': v$.user.firstName.$error }"
-              />
+              <input type="text" class="form-control" id="firstName" placeholder="First Name" v-model="user.firstName"
+                :class="{ 'is-invalid': v$.user.firstName.$error }" />
               <span v-if="v$.user.firstName.$error" class="error-message">
-                {{ $t('edit_profile_errors.first_name') }}
+                <span v-if="v$.user.firstName.required.$invalid">{{ $t('edit_profile_errors.first_name_required')
+                }}</span>
+                <span v-else-if="v$.user.firstName.maxLength.$invalid">{{ $t('edit_profile_errors.first_name_too_long')
+                }}</span>
               </span>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="lastName">{{ $t('user_profile_form.last_name') }}</label>
-              <input
-                type="text"
-                class="form-control"
-                id="lastName"
-                placeholder="Last Name"
-                v-model="user.lastName"
-                :class="{ 'is-invalid': v$.user.lastName.$error }"
-              />
+              <input type="text" class="form-control" id="lastName" placeholder="Last Name" v-model="user.lastName"
+                :class="{ 'is-invalid': v$.user.lastName.$error }" />
               <span v-if="v$.user.lastName.$error" class="error-message">
-                {{ $t('edit_profile_errors.last_name') }}
+                <span v-if="v$.user.lastName.required.$invalid">{{ $t('edit_profile_errors.last_name_required') }}</span>
+                <span v-else-if="v$.user.lastName.maxLength.$invalid">{{ $t('edit_profile_errors.last_name_too_long')
+                }}</span>
               </span>
             </div>
           </div>
@@ -88,12 +72,17 @@
 
 <script>
 import axios from "axios";
-import { required, email } from '@vuelidate/validators';
+import { required, email, maxLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import CustomPopUp from '../Notification/CustomPopUp.vue';
 
+const phoneNumberPattern = (value) => {
+  if (!value) return true;
+  return /^(?:\+385\s)?0?9\d\s?\d{2}\s?\d{2}\s?\d{3}$/.test(value);
+};
+
 export default {
-  components : {
+  components: {
     CustomPopUp
   },
   data() {
@@ -119,9 +108,9 @@ export default {
     return {
       user: {
         email: { required, email },
-        phoneNumber: { required },
-        firstName: { required },
-        lastName: { required }
+        phoneNumber: { required, phoneNumberPattern },
+        firstName: { required, maxLength: maxLength(50) },
+        lastName: { required, maxLength: maxLength(50) }
       }
     }
   },
@@ -151,10 +140,10 @@ export default {
 
         const url = `/users/${this.user.userId}`;
         try {
-          await axios.put(url, userData);
-          this.$store.commit('setUserInfoUpdated', true);
-          //alert(this.$t('info_messages.success_update'));
+          const response = await axios.put(url, userData);
+          this.$store.commit('setUserInfoUpdated', true); 
           this.setPopUpMessages('INFO', this.$t('info_messages.success_update'));
+          this.error = null;
         } catch (error) {
           console.error("Error updating user data:", error);
           this.error = this.$t('edit_profile_errors.failed_to_update');
@@ -209,7 +198,7 @@ export default {
 
 <style scoped>
 .is-invalid {
-  border-color: red; 
+  border-color: red;
 }
 
 .error-message {
@@ -218,4 +207,3 @@ export default {
   margin-top: 4px;
 }
 </style>
-

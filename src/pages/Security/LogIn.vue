@@ -8,7 +8,9 @@
           <input type="text" id="username" v-model="form.username" placeholder="Username"
             :class="{ 'is-invalid': v$.form.username.$error }">
           <span class="error-message" v-if="v$.form.username.$error">
-            Username is required.
+            <span v-if="v$.form.username.required.$invalid">Username is required.</span>
+            <span v-if="v$.form.username.minLength.$invalid">Username cannot be this short.</span>
+            <span v-if="v$.form.username.maxLength.$invalid">Username can not be that long.</span>
           </span>
         </div>
         <div class="input-group">
@@ -16,12 +18,14 @@
           <input type="password" id="password" v-model="form.password" placeholder="Password"
             :class="{ 'is-invalid': v$.form.password.$error }">
           <span class="error-message" v-if="v$.form.password.$error">
-            Password is required.
+            <span v-if="v$.form.password.required.$invalid">Password is required.</span>
+            <span v-else-if="v$.form.password.minLength.$invalid">Password can not be this short.</span>
+            <span v-else-if="v$.form.password.maxLength.$invalid">Password can not be that long</span>
           </span>
 
           <div v-if="error" class="error-message">
-          {{ error }}
-        </div>
+            {{ error }}
+          </div>
         </div>
         <button type="submit" class="login-button">Login</button>
       </form>
@@ -35,7 +39,7 @@
 
 <script>
 import axios from 'axios';
-import { required } from '@vuelidate/validators';
+import { required, minLength, maxLength, } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 
 export default {
@@ -51,8 +55,8 @@ export default {
   validations() {
     return {
       form: {
-        username: { required },
-        password: { required }
+        username: { required, minLength: minLength(3), maxLength: maxLength(30) },
+        password: { required, minLength: minLength(8), maxLength: maxLength(128) }
       }
     }
   },

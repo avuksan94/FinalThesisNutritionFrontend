@@ -289,10 +289,14 @@
     },
     "logout" : "Logout", 
     "edit_profile_errors" : {
-        "first_name" : "First name is required.",
-        "last_name" : "Last name is required.",
-        "phone_num" : "A valid phone number is required.", 
-        "email" : "A valid email is required.",
+        "first_name_required" : "First name is required.",
+        "first_name_too_long" : "First name is to long,must be less than 50 charachters.",
+        "last_name_required" : "Last name is required.",
+        "last_name_too_long" : "Last name is to long,must be less than 50 charachters.",
+        "phone_invalid" : "A valid phone number is required.", 
+        "phone_required" : "You need to enter a phone number.", 
+        "email_invalid" : "A valid email is required.",
+        "email_required" : "You need to enter an email address.",
         "failed_to_update" : "Failed to update profile. Please try again.",
         "error" : "Please correct the errors in the form."
     },
@@ -311,7 +315,10 @@
         "ingredient_unit_placeholder" : "Enter unit of measure",
         "ingredient_notes" : "Notes",
         "ingredient_save" : "Save",
-        "ingredient_cancel" : "Cancel"
+        "ingredient_cancel" : "Cancel",
+        "error_one" : "This field is required.",
+        "error_two" : "The name must be less than 50 characters.",
+        "error_three" : "The name cannot contain special charachters(.,/*) or numbers!"
     }, 
     "ingredients" : {
         "ingredient_name" : "Ingredient name",
