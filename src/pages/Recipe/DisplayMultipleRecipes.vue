@@ -103,7 +103,7 @@ export default {
             this.showNotification = true;
         },
         handleAddingCalories(recipe) {
-            this.triggerNotification('Added the meal for nutrition tracking', 'success', '✓', '#3eb27c', 'small');
+            this.triggerNotification(this.$t('recipe_card.add_to_nutrition_message'), 'success', '✓', '#3eb27c', 'small');
             this.addNutrientsToTracker(recipe.nutritionSummary, recipe.servings);
         },
         handleRemovingRecipe(recipeId) {

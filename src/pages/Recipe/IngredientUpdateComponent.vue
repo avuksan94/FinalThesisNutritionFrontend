@@ -1,4 +1,6 @@
 <template>
+    <custom-pop-up v-if="popup.isVisible" :title="popup.title" :message="popup.message" :confirm="popup.confirm"
+        :isVisible="popup.isVisible" @confirmed="handlePopupConfirm" @cancelled="handlePopupCancel"></custom-pop-up>
     <div class="form-container" v-if="editableIngredient">
         <form @submit.prevent="submitUpdate" class="form-grid">
             <div class="p-field">
@@ -7,9 +9,12 @@
                     :placeholder="$t('ingredients_add_component.ingredient_name_placeholder')" class="input-style"
                     :class="{ 'is-invalid': v$.editableIngredient.name.$error }" />
                 <div v-if="v$.editableIngredient.name.$error" class="error-message">
-                    <span v-if="v$.editableIngredient.name.required.$invalid">{{ $t('ingredients_add_component.error_one') }}</span>
-                    <span v-else-if="v$.editableIngredient.name.maxLength.$invalid">{{ $t('ingredients_add_component.error_two') }}</span>
-                    <span v-else-if="v$.editableIngredient.name.onlyLetters.$invalid">{{ $t('ingredients_add_component.error_three')
+                    <span v-if="v$.editableIngredient.name.required.$invalid">{{ $t('ingredients_add_component.error_one')
+                    }}</span>
+                    <span v-else-if="v$.editableIngredient.name.maxLength.$invalid">{{
+                        $t('ingredients_add_component.error_two') }}</span>
+                    <span v-else-if="v$.editableIngredient.name.onlyLetters.$invalid">{{
+                        $t('ingredients_add_component.error_three')
                     }}</span>
                 </div>
             </div>
@@ -25,8 +30,8 @@
             </div>
             <div class="button-container">
                 <button type="submit" class="green-button">{{ $t('ingredients_add_component.ingredient_save') }}</button>
-                <button type="button" class="cancel-button"
-                    @click="closeForm">{{ $t('ingredients_add_component.ingredient_cancel') }}</button>
+                <button type="button" class="cancel-button" @click="closeForm">{{
+                    $t('ingredients_add_component.ingredient_cancel') }}</button>
             </div>
         </form>
     </div>
@@ -37,6 +42,7 @@ import axios from 'axios';
 import Dropdown from 'primevue/dropdown';
 import { required, maxLength } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core';
+import CustomPopUp from '../Notification/CustomPopUp.vue';
 
 const onlyLetters = (value) => {
     if (value === '') return true;
@@ -47,6 +53,12 @@ export default {
     props: ['selectedIngredient'],
     data() {
         return {
+            popup: {
+                isVisible: false,
+                title: '',
+                message: '',
+                confirm: false
+            },
             editableIngredient: { ...this.selectedIngredient },
             measurementOptions: [
                 { label: this.$t('measurement.empty'), value: '' },
@@ -79,7 +91,8 @@ export default {
         };
     },
     components: {
-        Dropdown
+        Dropdown,
+        CustomPopUp
     },
     validations() {
         return {
@@ -112,16 +125,28 @@ export default {
                             this.$emit('updateComplete');
                         } else {
                             console.error('Failed to update ingredient with status:', response.status);
-                            alert(`Failed to update ingredient. Server responded with status: ${response.status}`);
+                            this.setPopUpMessages('ERROR', this.$t('warning_messages.failed_ingredients'));
                         }
                     } catch (error) {
                         console.error('Failed to update ingredient:', error);
-                        alert('Failed to update ingredient. Please check console for more details.');
+                        this.setPopUpMessages('ERROR', this.$t('warning_messages.failed_ingredients'));
                     }
                 } else {
                     console.error('Validation failed.');
                 }
             });
+        },
+        handlePopupConfirm() {
+            this.popup.isVisible = false;
+        },
+        handlePopupCancel() {
+            this.popup.isVisible = false;
+        },
+        setPopUpMessages(messageLevel, message) {
+            this.popup.isVisible = true;
+            this.popup.title = messageLevel;
+            this.popup.message = message;
+            this.popup.confirm = false;
         },
         closeForm() {
             this.$emit('closeForm');

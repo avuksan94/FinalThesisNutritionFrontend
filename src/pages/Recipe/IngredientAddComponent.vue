@@ -128,7 +128,6 @@ export default {
             });
         },
         async addIngredient(ingredientData) {
-            console.log("Sending data:", ingredientData);
             const username = localStorage.getItem("nutrioUser");
             const token = localStorage.getItem("token");
             if (!username || !token) {

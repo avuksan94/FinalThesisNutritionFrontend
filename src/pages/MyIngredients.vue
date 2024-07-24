@@ -1,12 +1,10 @@
 <template>
     <div class="content-row">
-      <!-- Ingredient addition form on the left -->
       <div class="ingredient-add">
         <ingredient-add-component></ingredient-add-component>
       </div>
     </div>
     <div>
-        <!-- Ingredients list on the right -->
       <div class="ingredients-list">
         <ingredients-component></ingredients-component>
       </div>

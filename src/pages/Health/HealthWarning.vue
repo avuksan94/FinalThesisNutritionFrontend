@@ -6,19 +6,27 @@
           {{ $t('health_warning_component.information') }}
         </h4>
         <div class="user-info">
-          <h5 class="warning-message">{{ $t('health_warning_component.warning_message') }} {{ warningMessage }}</h5>
-          <h5>{{ $t('health_warning_component.diet_pros') }}</h5>
-          <ul>
-            <li v-for="pro in dietPros" :key="pro">{{ pro }}</li>
-          </ul>
-          <h5>{{ $t('health_warning_component.diet_cons') }}</h5>
-          <ul>
-            <li v-for="con in dietCons" :key="con">{{ con }}</li>
-          </ul>
-          <h5>{{ $t('health_warning_component.alternative_diets') }}</h5>
-          <ul>
-            <li v-for="alter in alternativeDiets" :key="alter">{{ alter }}</li>
-          </ul>
+          <div v-if="warningMessage">
+            <h5 class="warning-message">{{ $t('health_warning_component.warning_message') }} {{ warningMessage }}</h5>
+          </div>
+          <div v-if="dietPros && dietPros.length > 0">
+            <h5>{{ $t('health_warning_component.diet_pros') }}</h5>
+            <ul>
+              <li v-for="pro in dietPros" :key="pro">{{ pro }}</li>
+            </ul>
+          </div>
+          <div v-if="dietCons && dietCons.length > 0">
+            <h5>{{ $t('health_warning_component.diet_cons') }}</h5>
+            <ul>
+              <li v-for="con in dietCons" :key="con">{{ con }}</li>
+            </ul>
+          </div>
+          <div v-if="alternativeDiets && alternativeDiets.length > 0">
+            <h5>{{ $t('health_warning_component.alternative_diets') }}</h5>
+            <ul>
+              <li v-for="alter in alternativeDiets" :key="alter">{{ alter }}</li>
+            </ul>
+          </div>
           <div class="warning-message" v-if="ingredientsToAvoid && ingredientsToAvoid.length > 0">
             <h5 class="warning-message">{{ $t('health_warning_component.ingredients_to_avoid') }}</h5>
             <ul>

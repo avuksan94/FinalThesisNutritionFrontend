@@ -9,7 +9,7 @@
     </div>
     <div class="row justify-content-center">
       <button class="orange-button" @click="generateItems">
-        {{ $t('generate_recipe.generate') }}
+        {{ $t('generate_meal_plan.generate_message') }}
       </button>
     </div>
     <br><br>

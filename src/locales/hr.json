@@ -358,7 +358,8 @@
       "warning_messages" : {
         "something_went_wrong" : "Došlo je do pogreške. Pokušajte ponovno!",
         "select_ingredients" : "Odaberite barem jednu namirnicu!",
-        "failed_tracker" : "Došlo je do pogreške. Pokušajte ponovno!"
+        "failed_tracker" : "Došlo je do pogreške. Pokušajte ponovno!",
+        "failed_ingredients" : "Došlo je do pogreške. Pokušajte ponovno!"
       },
       "info_messages" : {
         "success_update" : "Profil uspješno ažuriran!"
