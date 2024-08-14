@@ -7,7 +7,7 @@
       </div>
       
       <h4>{{ $t('instructions.message_one') }}</h4>
-      <a href="https://drive.google.com/path_to_your_document" target="_blank">
+      <a href="https://drive.google.com/file/d/1QBnAJa2MddLKBGZ5Qvr59Bvdze6FURdz/view?usp=sharing" target="_blank">
         <small>{{ $t('instructions.message_three')  }}</small>
       </a>
     </div>
