@@ -98,7 +98,7 @@ export default {
         });
 
         const response = await axios.post(`/recipesByUsername/${username}`, JSON.stringify(ingredientsData), { headers });
-        console.log(response);
+        //console.log(response);
         this.$store.commit('setRecipeData', response.data);
         this.isLoading = false;
       } catch (error) {

@@ -28,7 +28,7 @@ export default {
     };
     },
     mounted() {
-        console.log("All diets data:", this.diets);
+        //console.log("All diets data:", this.diets);
         this.startRotation();
     },
     beforeDestroy() {

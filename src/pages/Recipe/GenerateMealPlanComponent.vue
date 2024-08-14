@@ -90,7 +90,7 @@ export default {
         };
         const ingredientsData = this.selectedIngredients.map(ing => `${ing.name} ${ing.quantity || ''} ${ing.unit || ''}`.trim());
         const response = await axios.post(`/mealPlansGenByUsername/${username}`, JSON.stringify(ingredientsData), { headers });
-        console.log(response);
+        //console.log(response);
         this.$store.commit('setMealPlanData', response.data);
         this.isLoading = false;
       } catch (error) {

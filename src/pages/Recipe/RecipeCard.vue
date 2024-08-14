@@ -57,7 +57,7 @@ import axios from 'axios'
 export default {
   computed: {
     displayRecipe() {
-      console.log('Current recipe data:', this.recipe);
+      //console.log('Current recipe data:', this.recipe);
       return this.$store.state.recipeData;
     }
   },

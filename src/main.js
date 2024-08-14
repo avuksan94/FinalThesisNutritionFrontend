@@ -73,7 +73,7 @@ import 'primeicons/primeicons.css';
 import NutrioDashboard from './plugins/nutrioDashboard.js';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:8081/healthAPI';
+axios.defaults.baseURL = 'https://finalthesisnutritionsolution-production.up.railway.app/healthAPI';
 
 axios.interceptors.request.use(
   (config) => {

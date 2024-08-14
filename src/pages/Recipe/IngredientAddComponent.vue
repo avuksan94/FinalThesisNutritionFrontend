@@ -117,7 +117,7 @@ export default {
         },
         addItem() {
             this.v$.$validate().then((valid) => {
-                console.log('Validation state:', this.v$.item.name);
+                //console.log('Validation state:', this.v$.item.name);
                 if (valid) {
                     this.addIngredient(this.item);
                     this.resetForm();

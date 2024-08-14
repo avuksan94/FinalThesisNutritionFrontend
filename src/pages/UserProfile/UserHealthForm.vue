@@ -291,7 +291,7 @@ export default {
           healthConditions: healthConditions
         };
 
-        console.log(userData);
+        //console.log(userData);
         try {
           await axios.put(`/healthTrackersByUsername/${username}`, userData);
           this.$store.commit('setHealthInfoUpdated', true);
